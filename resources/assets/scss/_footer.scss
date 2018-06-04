@@ -1,0 +1,13 @@
+.footer {
+  padding: 72px 24px 72px 256px;
+  box-sizing: border-box;
+  background: rgb(33, 33, 33);
+
+  .footer-content {
+    color: rgba(255, 255, 255, 0.54);
+
+    a {
+      color: rgba(255, 255, 255, 0.87);
+    }
+  }
+}

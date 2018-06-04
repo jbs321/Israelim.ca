@@ -1,0 +1,34 @@
+@import "palletes";
+@import "font";
+@import "mixins";
+@import "keyframes";
+@import "animations";
+@import "general";
+@import "header";
+@import "footer";
+@import "components/placeholder";
+@import "menu";
+@import "components/bootstrap";
+@import "pages/bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+@for $i from 0 through 100 {
+  .delay-#{$i} {
+    animation-delay: #{$i/10}s;
+    -webkit-animation-delay: #{$i/10}s;
+  }
+}
+
+
+.fade-in {
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  opacity: .4;
+  position: absolute;
+  background: black;
+
+  @include animation(fade-in .2s);
+}

@@ -1,0 +1,121 @@
+.timeline-item {
+  border: 1px solid;
+  padding: 12px;
+  min-height: 200px;
+  background: #fff;
+  border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+  border-radius: 3px;
+
+  .animated-background {
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    height: 96px;
+    position: relative;
+
+    .background-masker {
+      position: absolute;
+      background: #fff;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+
+      &.header-top,
+      &.header-bottom,
+      &.subheader-bottom {
+        top: 0;
+        left: 40px;
+        right: 0;
+        height: 10px;
+      }
+
+      &.header-left,
+      &.subheader-left,
+      &.header-right,
+      &.subheader-right {
+        top: 10px;
+        left: 40px;
+        height: 8px;
+        width: 10px;
+      }
+
+      &.header-bottom {
+        top: 18px;
+        height: 6px;
+      }
+
+      &.subheader-left,
+      &.subheader-right {
+        top: 24px;
+        height: 6px;
+      }
+
+      &.header-right,
+      &.subheader-right {
+        width: auto;
+        left: 300px;
+        right: 0;
+      }
+
+      &.subheader-right {
+        left: 230px;
+      }
+
+      &.subheader-bottom {
+        top: 30px;
+        height: 10px;
+      }
+
+      &.content-top,
+      &.content-second-line,
+      &.content-third-line,
+      &.content-second-end,
+      &.content-third-end,
+      &.content-first-end {
+        top: 40px;
+        left: 0;
+        right: 0;
+        height: 6px;
+      }
+
+      &.content-top {
+        height: 20px;
+      }
+
+      &.content-first-end,
+      &.content-second-end,
+      &.content-third-end {
+        top: 60px;
+        left: 380px;
+        width: auto;
+        right: 0;
+        height: 8px;
+      }
+
+      &.content-second-line {
+        top: 68px;
+      }
+
+      &.content-second-end {
+        top: 74px;
+        left: 420px;
+      }
+
+      &.content-third-line {
+        top: 82px;
+      }
+
+      &.content-third-end {
+        top: 88px;
+        left: 300px;
+      }
+    }
+  }
+}
+
+

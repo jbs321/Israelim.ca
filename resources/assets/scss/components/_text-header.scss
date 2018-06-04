@@ -1,0 +1,9 @@
+.text-header {
+  display: table;
+  text-align: center;
+
+  span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}

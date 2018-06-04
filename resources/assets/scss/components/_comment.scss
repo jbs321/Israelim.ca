@@ -1,0 +1,14 @@
+.comment-container {
+  margin: auto;
+  max-width: 1000px;
+  background: #f7f7f7;
+  @include materialShadow(4);
+
+  .comment-control {
+    padding: 10px;
+    background: #fff;
+  }
+  .comment-view {
+    padding: 10px;
+  }
+}

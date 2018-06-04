@@ -1,0 +1,83 @@
+.callback-wrapper {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  position: fixed;
+  background: #eee;
+  align-items: center;
+
+  $diameter-huge: 270px;
+  $diameter-big: 250px;
+  $diameter-medium: 200px;
+  $diameter-small: 110px;
+  $diameter-xsmall: 45px;
+
+  .callback {
+    width: 500px;
+    height: 500px;
+    margin: auto;
+
+    .circle-big {
+      width: $diameter-huge;
+      height: $diameter-huge;
+      border: 4px dotted #85e0f2;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      border-radius: 214px;
+      @include animation(rotate-rev 10s infinite linear);
+
+
+      .circle {
+        width: $diameter-big;
+        height: $diameter-big;
+        border: 10px inset #85e0f2;
+        margin: auto;
+        display: flex;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        align-items: center;
+        border-radius: 200px;
+        @include animation(rotate 5s infinite linear);
+
+        .circle-small {
+          width: $diameter-medium;
+          height: $diameter-medium;
+          border: 6px outset #85e0f2;
+          margin: auto;
+          display: flex;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+          align-items: center;
+          border-radius: 156px;
+          @include animation(rotate-rev 3s infinite linear);
+
+          .circle-inner {
+            width: $diameter-small;
+            height: $diameter-small;
+            margin: auto;
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            border-radius: 100%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            background-color: rgb(133, 224, 242);
+            @include animation(pulse 1.5s infinite ease-in);
+
+            .circle-inner-inner {
+              width: $diameter-xsmall;
+              height: $diameter-xsmall;
+              margin: auto;
+              display: block;
+              box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+              border-radius: 100px;
+              background-color: rgb(74, 124, 134);
+              @include animation(pulse 1.5s infinite ease-in);
+            }
+          }
+        }
+      }
+    }
+  }
+}

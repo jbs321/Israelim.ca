@@ -1,0 +1,31 @@
+.user-panel-page {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f3f3f3;
+
+  img {
+    @include img-responsive();
+  }
+
+  .feed-container {
+    background: #fff;
+
+    header {
+      .mark {
+        float: right;
+      }
+    }
+
+    .feed-frame {
+      padding: 10px;
+      background: #fff;
+      margin-bottom: 10px;
+      @include materialShadow(1);
+
+      &:first-of-type {
+        margin-top: 10px;
+      }
+    }
+  }
+}
