@@ -4,6 +4,7 @@ import {fetchAuth} from "../actions/Auth";
 import Login from "../form/Login";
 import {Switch, Route} from 'react-router-dom';
 import Welcome from "../page/welcome";
+import Register from "../form/Register";
 
 class AuthBoundary extends React.Component {
     componentDidMount() {
@@ -17,6 +18,7 @@ class AuthBoundary extends React.Component {
             return (
                 <Switch>
                     <Route path="/login" component={Login}/>
+                    <Route path="/register" component={Register}/>
                     <Route exact path="/" component={Welcome}/>
                 </Switch>
             );
