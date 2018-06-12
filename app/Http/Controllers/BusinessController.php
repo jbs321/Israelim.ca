@@ -6,10 +6,24 @@ use App\Business;
 use App\Http\Requests\BusinessRequest;
 use function Couchbase\defaultDecoder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class BusinessController extends Controller
 {
+    public function index()
+    {
+        /** @var Collection $list */
+        $list = Business::paginate(5);
+
+        $list->each(function(Business &$item, $key) {
+            $item->idx = $key;
+            return $item;
+        });
+
+        return new JsonResponse($list);
+    }
+
     public function create(BusinessRequest $request)
     {
         $details = $request->all();

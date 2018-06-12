@@ -1,7 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {getAllBusiness} from '../actions/Business'
 import {withStyles} from '@material-ui/core/styles';
 import Search from '../components/Search'
+import SingleLineGridList from '../components/Grid/SignleLineGridList'
 
 const styles = (theme) => ({
     container: {
@@ -22,7 +25,7 @@ const styles = (theme) => ({
         padding: 10,
     },
     bodyContainer: {
-      height: 30,
+        height: 30,
         backgroundColor: "#ffffff",
     },
     floating: {
@@ -45,14 +48,19 @@ const styles = (theme) => ({
 });
 
 class Welcome extends React.Component {
+    componentDidMount() {
+        this.props.getAllBusiness();
+    }
+
     render() {
-        const {classes} = this.props;
+        const {classes, business} = this.props;
+        console.log(business);
         return (
             <div className={"container-fluid" + " " + classes.container}>
                 <header className={classes.header + " align-middle"}>Welcome to the Dungeon</header>
 
                 <div className={classes.body + " d-flex align-items-center"}>
-                    <div className={"col-6 offset-3 " +  classes.bodyContainer}>
+                    <div className={"col-6 offset-3 " + classes.bodyContainer}>
                         <Search/>
                     </div>
                 </div>
@@ -67,6 +75,9 @@ class Welcome extends React.Component {
                             </div>
                         </div>
 
+                        <div className="">
+                            <SingleLineGridList list={business.list}/>
+                        </div>
                     </div>
                 </div>
 
@@ -83,4 +94,8 @@ class Welcome extends React.Component {
     }
 }
 
-export default withStyles(styles)(Welcome);
+function mapStateToProps(state) {
+    return state;
+}
+
+export default withStyles(styles)(connect(mapStateToProps, {getAllBusiness})(Welcome));

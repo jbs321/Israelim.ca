@@ -5,6 +5,7 @@ import authReducer from './Auth';
 import loginReducer from './Login';
 import postsReducer from './Post';
 import registrationReducer from './Registration';
+import businessReducer from './Business';
 
 const rootReducer = combineReducers({
     form: formReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     isAuth: authReducer,
     login: loginReducer,
     register: registrationReducer,
+    business: businessReducer,
 });
 
 export default rootReducer;

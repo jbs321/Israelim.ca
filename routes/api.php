@@ -17,6 +17,9 @@ Route::post('/ping', function (Request $request) {
     return new \Illuminate\Http\JsonResponse(["pong" => [1, 2, 3, 4]]);
 });
 
+
+Route::post('/business', 'BusinessController@index');
+
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/register/update', 'Auth\RegisterController@update');
 Route::post('/register/validator', 'Auth\RegisterController@validator');
