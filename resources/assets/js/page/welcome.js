@@ -2,8 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles';
 import Search from '../components/Search'
-import Card from '@material-ui/core/Card'
-import Paper from '@material-ui/core/Paper';
 
 const styles = (theme) => ({
     container: {

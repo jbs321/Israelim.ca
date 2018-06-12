@@ -22,6 +22,10 @@ const theme = createMuiTheme({
     status: {
         danger: 'orange',
     },
+    breakpoints: {
+        keys: ['xs', 'sm', 'md', 'lg'],
+        values: [0, 768, 992, 1200],
+    },
 });
 
 
