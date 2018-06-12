@@ -10,13 +10,29 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+    const PLURAL               = "users";
+
+    const FIELD_ID             = 'id';
+    const FIELD_PHONE_NUMBER   = 'phone_number';
+    const FIELD_FIRST_NAME     = 'first_name';
+    const FIELD_LAST_NAME      = 'last_name';
+    const FIELD_EMAIL          = 'email';
+    const FIELD_PASSWORD       = 'password';
+    const FIELD_REMEMBER_TOKEN = 'remember_token';
+
+    protected $table = "users";
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        self::FIELD_FIRST_NAME,
+        self::FIELD_LAST_NAME,
+        self::FIELD_PHONE_NUMBER,
+        self::FIELD_EMAIL,
+        self::FIELD_PASSWORD,
     ];
 
     /**
@@ -25,9 +41,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'id','password', 'remember_token',
+        self::FIELD_PASSWORD,
+        self::FIELD_REMEMBER_TOKEN,
     ];
-
 
     /**
      *
@@ -51,5 +67,13 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Post')
                     ->orderByDesc("id");
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function business()
+    {
+        return $this->hasMany(Business::class);
     }
 }

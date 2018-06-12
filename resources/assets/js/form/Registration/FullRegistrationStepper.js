@@ -1,16 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
+import {stepBack, stepForward} from '../../actions/Registration';
+import {connect} from 'react-redux';
+import {submit} from 'redux-form';
+
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Register from "./Register";
 import RegisterBusinessInformation from "./RegisterBusinessInformation";
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 
+import {FORM__REGISTER_USER} from './Register';
+import {FORM__REGISTER_BUSINESS_INFO} from './RegisterBusinessInformation';
 
 const styles = theme => ({
     root: {
@@ -32,60 +37,36 @@ const styles = theme => ({
     },
 });
 
-function getSteps() {
-    return ['Register Personal Information', 'Register Business Information', 'Finnish'];
-}
-
 class FullRegistrationStepper extends React.Component {
-    state = {
-        activeStep: 0,
-    };
 
     handleNext = () => {
-        const {activeStep} = this.state;
+        const {register: {activeStep}, stepForward, submit} = this.props;
 
-        if (getSteps().length - 1 === activeStep) {
-            return;
+        switch (activeStep) {
+            case 0:
+                submit(FORM__REGISTER_USER);
+                break;
+            case 1:
+                submit(FORM__REGISTER_BUSINESS_INFO);
+                break;
+            default:
+                stepForward();
+                break;
         }
-
-        this.setState({
-            activeStep: activeStep + 1,
-        });
-    };
-
-    handleBack = () => {
-        const {activeStep} = this.state;
-
-        this.setState({
-            activeStep: activeStep - 1,
-        });
     };
 
     getStepContent = (step) => {
-        const {classes} = this.props;
-
         switch (step) {
             case 0:
                 return <Register/>;
             case 1:
                 return <RegisterBusinessInformation/>;
-            case 2:
-                return (
-                    <div>
-                        <Typography className={classes.instructions}>
-                            All steps completed - you&quot;re finished
-                        </Typography>
-                    </div>
-                );
-            default:
-                return 'Unknown step';
         }
     };
 
 
     renderStepper = () => {
-        const steps = getSteps();
-        const {activeStep} = this.state;
+        const {activeStep, steps} = this.props.register;
 
         return (
             <Stepper activeStep={activeStep} className={"hidden-xs-down"}>
@@ -104,13 +85,11 @@ class FullRegistrationStepper extends React.Component {
     };
 
     renderControls = () => {
-        const {classes} = this.props;
-        const steps = getSteps();
-        const {activeStep} = this.state;
+        const {classes, register: {activeStep, steps}, stepBack, submit} = this.props;
 
         return (
             <div>
-                <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
+                <Button disabled={activeStep === 0} onClick={() => stepBack()} className={classes.button}>
                     Back
                 </Button>
 
@@ -122,15 +101,14 @@ class FullRegistrationStepper extends React.Component {
     };
 
     renderStepperContent = () => {
-        const {classes} = this.props;
-        const {activeStep} = this.state;
+        const {classes, register: {activeStep, steps}} = this.props;
 
         return (
             <div>
                 <div className={classes.instructions}>
                     <Card className={classes.cardContainer}>
                         <div className={"hidden-sm-up"}>
-                            <CardHeader subheader={(activeStep + 1) + ". " + getSteps()[activeStep]}/>
+                            <CardHeader subheader={(activeStep + 1) + ". " + steps[activeStep]}/>
                         </div>
 
                         {this.getStepContent(activeStep)}
@@ -143,12 +121,11 @@ class FullRegistrationStepper extends React.Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes: {root}} = this.props;
 
         return (
-            <div className={classes.root + " container"}>
+            <div className={root + " container"}>
                 {this.renderStepper()}
-
                 <div>
                     {this.renderStepperContent()}
                 </div>
@@ -157,8 +134,13 @@ class FullRegistrationStepper extends React.Component {
     }
 }
 
+function mapStateToProps(state) {
+    return state;
+}
+
 FullRegistrationStepper.propTypes = {
-    classes: PropTypes.object,
+    register: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FullRegistrationStepper);
+export default connect(mapStateToProps, {stepBack, submit, stepForward})(withStyles(styles)(FullRegistrationStepper));

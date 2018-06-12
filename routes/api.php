@@ -13,22 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('/ping', function (Request $request) {
+    return new \Illuminate\Http\JsonResponse(["pong" => [1, 2, 3, 4]]);
+});
+
+Route::post('/register', 'Auth\RegisterController@create');
+Route::post('/register/update', 'Auth\RegisterController@update');
+Route::post('/register/validator', 'Auth\RegisterController@validator');
+
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    Route::post('/userX', function (Request $request) {
-        return new \Illuminate\Http\JsonResponse([1, 2, 3, 4]);
-    });
-
-    Route::prefix('/logs')->group(function () {
-        Route::resource('/user_log', 'LogController');
-    });
-
     Route::post('/chart/sugar', 'HomeController@index');
-
-
     Route::get('posts/{post}', 'PostController@findByPost');
     Route::post('posts/{post}', 'PostController@update');
     Route::get('/user/posts', 'PostController@findAllByUser');
@@ -36,6 +30,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('posts/{post}/delete', 'PostController@destroy');
 
     Route::post('posts/{post}/uploadImages', 'PostImageController@saveImages');
+
+    Route::prefix('business')->group(function () {
+        Route::post('/register', 'BusinessController@create');
+        Route::post('/register/update', 'BusinessController@update');
+        Route::post('/register/delete', 'BusinessController@delete');
+    });
 });
 
 

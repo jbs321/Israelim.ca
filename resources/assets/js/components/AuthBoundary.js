@@ -4,7 +4,7 @@ import {fetchAuth} from "../actions/Auth";
 import Login from "../form/Login";
 import {Switch, Route} from 'react-router-dom';
 import Welcome from "../page/welcome";
-import Register from "../form/Register";
+import Register from "../form/Registration/FullRegistrationStepper";
 
 class AuthBoundary extends React.Component {
     componentDidMount() {

@@ -4,13 +4,15 @@ import userReducer from './User';
 import authReducer from './Auth';
 import loginReducer from './Login';
 import postsReducer from './Post';
+import registrationReducer from './Registration';
 
 const rootReducer = combineReducers({
     form: formReducer,
     posts: postsReducer,
     user: userReducer,
     isAuth: authReducer,
-    login: loginReducer
+    login: loginReducer,
+    register: registrationReducer,
 });
 
 export default rootReducer;
