@@ -6,7 +6,7 @@ export const FETCH_USER_PROFILE = "fetch_user_profile";
 
 let qs = require('qs');
 
-const URL_GET_USER_PROFILE = "api/user";
+const URL_GET_USER_PROFILE = "user";
 
 
 export function registerUser(user, cb) {

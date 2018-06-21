@@ -27,7 +27,7 @@ export function login(email, password, cb) {
     const request = axios({
         method: "POST",
         url: "oauth/token",
-        baseURL: APP_URL,
+        baseURL: "/",
         data: qs.stringify(postData),
     });
 
@@ -74,7 +74,7 @@ export function register(user) {
     form.append("password", user.password);
     form.append("password_confirmation", user.password_confirmation);
 
-    const request = axios.post("/api/register", form);
+    const request = axios.post("/register", form);
 
     request.then(response => {
             let result = response.data;

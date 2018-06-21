@@ -1,14 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import CustomToolbar from '../components/CustomToolbar';
-import Dashboard from "../components/dashboard/Dashboard";
+import ButtonAppBar from '../components/ButtonAppBar';
 
 class HomePage extends React.Component {
     render() {
         return (
             <div className={"container-fluid"} style={{padding: 0}}>
-                <CustomToolbar/>
-                <Dashboard/>
+                <ButtonAppBar/>
             </div>
         );
     }

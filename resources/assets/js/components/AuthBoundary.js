@@ -1,10 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fetchAuth} from "../actions/Auth";
-import Login from "../form/Login";
-import {Switch, Route} from 'react-router-dom';
-import Welcome from "../page/welcome";
-import Register from "../form/Registration/FullRegistrationStepper";
 
 class AuthBoundary extends React.Component {
     componentDidMount() {
@@ -12,18 +8,7 @@ class AuthBoundary extends React.Component {
     }
 
     render() {
-        const {isAuth} = this.props;
-
-        if (!isAuth) {
-            return (
-                <Switch>
-                    <Route path="/login" component={Login}/>
-                    <Route path="/register" component={Register}/>
-                    <Route exact path="/" component={Welcome}/>
-                </Switch>
-            );
-        }
-
+        //handle Autherized here or continue
         return this.props.children;
     }
 }

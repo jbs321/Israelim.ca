@@ -11,23 +11,20 @@ import {createStore, applyMiddleware} from 'redux';
 import history from './history';
 import App from "./app";
 import _ from 'lodash';
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
+import blue from '@material-ui/core/colors/blue';
+import red from '@material-ui/core/colors/red';
 
 const theme = createMuiTheme({
     palette: {
-        primary: purple,
-        secondary: green,
+        primary: blue,
+        secondary: red,
+        contrastThreshold: 3,
     },
-    status: {
-        danger: 'orange',
-    },
-    breakpoints: {
-        keys: ['xs', 'sm', 'md', 'lg'],
-        values: [0, 768, 992, 1200],
-    },
+    // breakpoints: {
+    //     keys: ['xs', 'sm', 'md', 'lg'],
+    //     values: [0, 768, 992, 1200],
+    // },
 });
-
 
 /**
  * Set global setting for Axios

@@ -74,7 +74,7 @@ export const asyncValidate = values => {
 
 
     const promise = new Promise((resolve, reject) => {
-            axios.post("/api/register/validator", values).then((data) => {
+            axios.post("/register/validator", values).then((data) => {
                 resolve(data);
             }).catch((data) => reject(data));
         }

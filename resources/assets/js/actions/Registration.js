@@ -7,7 +7,6 @@ export const STEP_BACK = "step_back";
 export const STEP_FORWARD = "step_forward";
 
 const {
-    APP_URL,
     REACT_AUTH_CONFIG_CLIENT_ID,
     REACT_AUTH_CONFIG_CLIENT_SECRET
 } = process.env.ENV;
@@ -25,9 +24,9 @@ export function registerUser(user) {
     let request;
 
     if (user.id === undefined) {
-        request = axios.post("/api/register", form);
+        request = axios.post("/register", form);
     } else {
-        request = axios.post("/api/register/update", form);
+        request = axios.post("/register/update", form);
     }
 
 
@@ -44,6 +43,7 @@ export function registerUser(user) {
         const authRequest = axios({
             method: "POST",
             url: "/oauth/token",
+            baseURL: "/",
             data: qs.stringify(postData),
         });
 
@@ -81,9 +81,9 @@ export function registerBusiness(cb = undefined, business) {
     let request;
 
     if (business.id === undefined) {
-        request = axios.post("/api/business/register", form);
+        request = axios.post("/business/register", form);
     } else {
-        request = axios.post("/api/business/register/update", form);
+        request = axios.post("/business/register/update", form);
     }
 
     //Trigger Callback

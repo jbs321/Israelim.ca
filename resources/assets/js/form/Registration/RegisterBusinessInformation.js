@@ -6,6 +6,8 @@ import PhoneField from "../fields/PhoneField";
 import {registerBusiness} from '../../actions/Registration';
 import {validateBusiness as validate} from './RegistrationValidation';
 import history from '../../history';
+import Typography from '@material-ui/core/Typography';
+import ImageUploadField from "../fields/ImageUploadField";
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
@@ -13,7 +15,8 @@ class RegisterBusinessInformation extends React.Component {
     render() {
         return (
             <div className={"container"}>
-                <Form onSubmit={this.props.handleSubmit(this.props.registerBusiness.bind(this, () => history.push("/")))}>
+                <Form
+                    onSubmit={this.props.handleSubmit(this.props.registerBusiness.bind(this, () => history.push("/")))}>
                     <Field
                         name="name"
                         label="Business Name"
@@ -64,6 +67,17 @@ class RegisterBusinessInformation extends React.Component {
                         label="Industry"
                         component={TextField}
                     />
+
+                    <div className={"row"}>
+                        <div className={"col p-0 m-0"}>
+                            <Typography caption={"subheading"}>Upload Business Images</Typography>
+                            <Field
+                                name={"images"}
+                                label={"images"}
+                                component={ImageUploadField}
+                            />
+                        </div>
+                    </div>
                 </Form>
             </div>
         );

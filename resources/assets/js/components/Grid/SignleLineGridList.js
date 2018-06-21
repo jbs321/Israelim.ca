@@ -29,29 +29,10 @@ const styles = theme => ({
     },
 });
 
-
-const tileData = [
-  {
-    img: "https://material-ui.com/static/images/grid-list/breakfast.jpg",
-    title: 'Image 1',
-    author: 'Jacob',
-  },  {
-    img: "https://material-ui.com/static/images/grid-list/burgers.jpg",
-    title: 'Image 2',
-    author: 'Dani',
-  },  {
-    img: "https://material-ui.com/static/images/grid-list/camera.jpg",
-    title: 'Image 3',
-    author: 'Avi',
-  },
-];
-
-function SingleLineGridList(props) {
-    const { classes, list } = props;
+const renderList = (list) => {
     let listHtml = [];
 
     _.each(list, (item) => {
-        console.log(item);
         listHtml.push(
             {
                 img: "https://material-ui.com/static/images/grid-list/camera.jpg",
@@ -61,10 +42,16 @@ function SingleLineGridList(props) {
         );
     });
 
+    return listHtml;
+};
+
+function SingleLineGridList(props) {
+    const { classes, list } = props;
+
     return (
         <div className={classes.root}>
             <GridList className={classes.gridList} cols={2.5}>
-                {listHtml.map((tile, key) => (
+                {renderList(list).map((tile, key) => (
                     <GridListTile key={key}>
                         <img src={tile.img} alt={tile.title} />
                         <GridListTileBar

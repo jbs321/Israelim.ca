@@ -10,7 +10,7 @@ const style = theme => ({
     button: {
         margin: theme.spacing.unit,
     },
-    input: {
+    hidden: {
         display: 'none',
     },
     wrapper: {
@@ -109,12 +109,8 @@ class FileUpload extends React.Component {
         });
     };
 
-    clear = () => {
-        this.setState({images: []});
-    }
-
     render() {
-        const {classes: {wrapper, rail, locomotive, button, input, label}} = this.props;
+        const {classes: {wrapper, rail, locomotive, button, hidden, label}, input} = this.props;
 
         return (
             <div className={wrapper}>
@@ -122,7 +118,7 @@ class FileUpload extends React.Component {
                     {this.renderImages()}
 
                     <div className={locomotive + " .align-middle"}>
-                        <input accept="image/*" className={input} id="icon-button-file"
+                        <input accept="image/*" className={hidden} {...input} id="icon-button-file"
                                onChange={this.fileChangedHandler} type="file" multiple/>
                         <label htmlFor="icon-button-file" className={label}>
                             <IconButton color="primary" className={button} component="span">
