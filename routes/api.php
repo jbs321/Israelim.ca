@@ -18,6 +18,9 @@ Route::post('/ping', function (Request $request) {
 });
 
 
+Route::post('/upload', 'UploadController@uploadImages');
+
+
 Route::post('/business', 'BusinessController@index');
 
 Route::post('/register', 'Auth\RegisterController@create');

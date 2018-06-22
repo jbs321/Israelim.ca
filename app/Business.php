@@ -42,4 +42,9 @@ class Business extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function business()
+    {
+        return $this->hasMany(BusinessFile::class);
+    }
 }
