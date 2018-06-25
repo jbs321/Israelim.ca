@@ -19,6 +19,7 @@ Route::post('/ping', function (Request $request) {
 
 
 Route::post('/upload', 'UploadController@uploadImages');
+Route::delete('/upload/delete', 'UploadController@deleteFile');
 
 
 Route::post('/business', 'BusinessController@index');

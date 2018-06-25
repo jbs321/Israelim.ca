@@ -4,7 +4,6 @@ import {withStyles} from '@material-ui/core/styles';
 import {stepBack, stepForward} from '../../actions/Registration';
 import {connect} from 'react-redux';
 import {submit} from 'redux-form';
-
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -61,6 +60,8 @@ class FullRegistrationStepper extends React.Component {
                 return <Register/>;
             case 1:
                 return <RegisterBusinessInformation/>;
+            case 2:
+                return "dsfsdf";
         }
     };
 

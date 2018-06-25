@@ -67,7 +67,7 @@ export function registerUser(user) {
     }
 }
 
-export function registerBusiness(cb = undefined, business) {
+export function registerBusiness(cb = undefined, images, business) {
     let form = new FormData();
     form.append("name", business.name);
     form.append("province", business.province);
@@ -77,6 +77,7 @@ export function registerBusiness(cb = undefined, business) {
     form.append("industry", business.industry);
     form.append("email", business.email);
     form.append("phone_number", business.phone_number);
+    form.append("images", images);
 
     let request;
 

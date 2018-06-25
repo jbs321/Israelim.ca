@@ -74,43 +74,34 @@ class FileUpload extends React.Component {
         images: [],
     };
 
-    componentDidMount() {
-        const {images} = this.state;
-        this.setState({images: images});
-    }
-
-    fileChangedHandler = (event) => {
-        const newFiles = _.values(event.target.files);
-        const {images} = this.state;
+    handleOnChange = (event) => {
         const {onChange} = this.props;
-        const merged = images.concat(newFiles);
-        this.setState({images: merged});
 
-        onChange(merged);
+        this.setState({images: event.target.files});
+
+        if(onChange !== undefined) {
+            onChange(event.target.files);
+        }
     };
 
-    deleteImage = (name) => {
-        const {onChange} = this.props;
-        let images = this.state.images.filter((image) => {
-            return image.name !== name;
-        });
+    //remove files from state and return onDelete with removed files
+    removeFile = (file) => {
+        const {onDelete} = this.props;
+        let {images}   = this.state;
+
+        _.remove(images, (image) => (image.name === file.name));
 
         this.setState({images: images});
 
-        onChange(images);
-    };
-
-    renderImages = () => {
-        const {images} = this.state;
-
-        return images.map((image, key) => {
-            let src = URL.createObjectURL(image);
-            return <Wagon key={key} src={src} alt={image.name} onDelete={() => this.deleteImage(image.name)}/>
-        });
+        if (onDelete !== undefined) {
+            onDelete(file);
+        }
     };
 
     render() {
-        const {classes: {wrapper, rail, locomotive, button, hidden, label}, input} = this.props;
+        const {classes: {wrapper, rail, locomotive, button, hidden, label}} = this.props;
+
+        console.log(this.state.files);
 
         return (
             <div className={wrapper}>
@@ -118,8 +109,15 @@ class FileUpload extends React.Component {
                     {this.renderImages()}
 
                     <div className={locomotive + " .align-middle"}>
-                        <input accept="image/*" className={hidden} {...input} id="icon-button-file"
-                               onChange={this.fileChangedHandler} type="file" multiple/>
+                        <input accept="image/*"
+                               className={hidden}
+                               value={this.state.files}
+                               id="icon-button-file"
+                               onChange={this.handleOnChange}
+                               type="file"
+                               multiple
+                        />
+
                         <label htmlFor="icon-button-file" className={label}>
                             <IconButton color="primary" className={button} component="span">
                                 <FileUploadIcon/>
@@ -130,11 +128,21 @@ class FileUpload extends React.Component {
             </div>
         );
     }
+
+    renderImages = () => {
+        const {images} = this.state;
+
+        return images.map((image, key) => {
+            let src = URL.createObjectURL(image);
+            return <Wagon key={key} src={src} alt={image.name} onDelete={() => this.removeFile(image)}/>
+        });
+    };
 }
 
 FileUpload.propTypes = {
     classes: PropTypes.object.isRequired,
     onChange: PropTypes.func,
+    onDelete: PropTypes.func,
     images: PropTypes.array,
 };
 

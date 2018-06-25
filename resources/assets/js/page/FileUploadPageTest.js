@@ -1,34 +1,54 @@
 import React from 'react'
+import {onDelete, onUpload} from '../actions/Files'
 import FileUpload from '../components/fileUpload/FileUpload'
 import axios from 'axios'
+import _ from 'lodash'
 
 export default class FileUploadPageTest extends React.Component {
     state = {
-        data: [],
+        uploaded: {},
+        selectedImages: [],
     };
 
     onUpload = (files) => {
-        const formData = new FormData();
-        formData.append('count', files.length);
+        let that = this;
 
-        files.forEach((file, key) => {
-            let num = key + 1;
-            formData.append(`file${num}`, files[key]);
+        files = files.filter((file) => {
+            return !_.has(that.state.data, file.name);
         });
-        axios.post("/upload", formData, {
-            headers: { "X-Requested-With": "XMLHttpRequest" },
-        }).then(response => {
-            const data = response.data;
-            const fileURL = data.secure_url // You should store this URL for future references in your app
-            console.log(data);
-        })
+
+        if (files.length === 0) return;
+
+        onUpload(files).then((data) => {
+            let uploaded = data.data;
+            this.setState({
+                uploaded: _.assign(that.state.uploaded, uploaded),
+                selectedImages: files.map(file => file.name),
+            });
+        });
+    };
+
+    onDelete = (file) => {
+        let {uploaded, selectedImages} = this.state;
+        const filePath = uploaded[file.name];
+
+        onDelete(filePath).then(data => {
+            _.pull(selectedImages, file.name);
+
+            this.setState({
+                uploaded: _.omit(uploaded, [file.name]),
+                selectedImages: selectedImages,
+            });
+        });
     };
 
     render() {
         return (
             <div>
                 Upload:
-                <FileUpload onChange={this.onUpload}/>
+                <FileUpload onChange={this.onUpload} onDelete={this.onDelete}/>
+                {JSON.stringify(this.state.uploaded)}
+                {JSON.stringify(this.state.selectedImages)}
             </div>
         )
     }
