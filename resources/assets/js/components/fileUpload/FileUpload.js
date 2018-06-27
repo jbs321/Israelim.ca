@@ -76,18 +76,24 @@ class FileUpload extends React.Component {
 
     handleOnChange = (event) => {
         const {onChange} = this.props;
+        const files = event.target.files;
+        this.setState({images: files});
 
-        this.setState({images: event.target.files});
-
-        if(onChange !== undefined) {
-            onChange(event.target.files);
+        if (onChange !== undefined) {
+            onChange(Array.from(files));
         }
     };
 
-    //remove files from state and return onDelete with removed files
+    //Remove files from state and return onDelete with removed files
+    //@SEE: https://developer.mozilla.org/en-US/docs/Web/API/FileList
     removeFile = (file) => {
         const {onDelete} = this.props;
-        let {images}   = this.state;
+        const id = this.props.id || "file-upload-input";
+
+        let images = Array.from(this.state.images);
+
+        //FileList in Input is read-only hence the only way to remove a file is tr remove all files
+        document.querySelector(`#${id}`).value = "";
 
         _.remove(images, (image) => (image.name === file.name));
 
@@ -101,7 +107,7 @@ class FileUpload extends React.Component {
     render() {
         const {classes: {wrapper, rail, locomotive, button, hidden, label}} = this.props;
 
-        console.log(this.state.files);
+        const id = this.props.id || "file-upload-input";
 
         return (
             <div className={wrapper}>
@@ -112,13 +118,13 @@ class FileUpload extends React.Component {
                         <input accept="image/*"
                                className={hidden}
                                value={this.state.files}
-                               id="icon-button-file"
+                               id={id}
                                onChange={this.handleOnChange}
                                type="file"
                                multiple
                         />
 
-                        <label htmlFor="icon-button-file" className={label}>
+                        <label htmlFor={id} className={label}>
                             <IconButton color="primary" className={button} component="span">
                                 <FileUploadIcon/>
                             </IconButton>
@@ -132,7 +138,7 @@ class FileUpload extends React.Component {
     renderImages = () => {
         const {images} = this.state;
 
-        return images.map((image, key) => {
+        return Array.from(images).map((image, key) => {
             let src = URL.createObjectURL(image);
             return <Wagon key={key} src={src} alt={image.name} onDelete={() => this.removeFile(image)}/>
         });

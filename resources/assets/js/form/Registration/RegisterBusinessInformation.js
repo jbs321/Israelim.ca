@@ -8,46 +8,62 @@ import {registerBusiness} from '../../actions/Registration';
 import {validateBusiness as validate} from './RegistrationValidation';
 import Typography from '@material-ui/core/Typography';
 import FileUpload from '../../components/fileUpload/FileUpload';
+import _ from "lodash";
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
 class RegisterBusinessInformation extends React.Component {
     state = {
-        uploaded: {},
+        images: {},
+        selected: [],
     };
 
     handleOnChange = (files) => {
-        const {uploaded} = this.state;
-        let newFiles = files.filter(file => {
-            return !_.has(uploaded, file.name);
+        const {images} = this.state;
+        let newState = {};
+
+        this.setState({selected: files.map(file => file.name)});
+
+        let filtered = _.filter(files, (file) => {
+            return !Object.keys(images).includes(file.name);
         });
 
-        if(_.isEmpty(newFiles)) {
+        if (filtered.length === 0) {
             return;
         }
 
-        onUpload(newFiles).then((data) => {
+        onUpload(filtered).then((data) => {
             let uploaded = data.data;
-            uploaded = _.assign(_.keyBy(newFiles, "name"), uploaded);
-            this.setState({uploaded: uploaded});
+
+            _.each(uploaded, (path, name) => {
+                newState = _.assign(images, {
+                    [name]: {
+                        path,
+                        uploaded: true,
+                    }
+                })
+            });
+
+            this.setState({images: newState});
         });
     };
 
     handleOnDelete = (file) => {
         let {images} = this.state;
+        const filePath = _.find(images, (item, name) => name === file.name).path;
+        let that = this;
 
-        _.remove(images, (image) => (image.name === file.name));
-
-        //handle client remove
-        this.setState({images: images});
-
-        //handle server remove
-        onDelete(file);
+        onDelete(filePath).then(data => {
+            let deletedPath = data.data;
+            let filtered = _.pickBy(images, (img) => img.path !== deletedPath);
+            that.setState({images: filtered});
+        });
     };
 
     render() {
         const {valid, handleSubmit, registerBusiness} = this.props;
         const {images} = this.state;
+        const that = this;
 
         const onSubmitCallback = () => {
             const {onSubmit} = this.props;
@@ -59,7 +75,17 @@ class RegisterBusinessInformation extends React.Component {
 
         return (
             <div className={"container"}>
-                <Form onSubmit={handleSubmit(registerBusiness.bind(this, onSubmitCallback, images))}>
+                <Form onSubmit={handleSubmit((values) => {
+                    const {images, selected} = that.state;
+
+                    let filtered = _.pickBy(images, (image, name) => {
+                        return selected.includes(name);
+                    });
+
+                    let paths = _.map(filtered, image => image.path);
+
+                    registerBusiness(onSubmitCallback, paths, values);
+                })}>
                     <Field
                         name="name"
                         label="Business Name"
@@ -111,15 +137,17 @@ class RegisterBusinessInformation extends React.Component {
                         </div>
                     </div>
 
-                    {
-                        JSON.stringify(this.state.uploaded)
-                    }
-
                     <button type="submit" disabled={!valid}>Regsiter</button>
                 </Form>
             </div>
         );
     }
+}
+
+function mapStateToProps(state) {
+    return {
+        initialValues: state.register.business
+    };
 }
 
 RegisterBusinessInformation = reduxForm({
@@ -136,10 +164,8 @@ RegisterBusinessInformation = reduxForm({
     destroyOnUnmount: false,
 })(RegisterBusinessInformation);
 
-function mapStateToProps(state) {
-    return {
-        initialValues: state.register.business
-    };
-}
+RegisterBusinessInformation = connect(mapStateToProps, {registerBusiness})(RegisterBusinessInformation);
 
-export default connect(mapStateToProps, {registerBusiness})(RegisterBusinessInformation);
+
+
+export default RegisterBusinessInformation;

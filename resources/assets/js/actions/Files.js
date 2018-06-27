@@ -1,6 +1,10 @@
 import axios from "axios/index";
 
-export const onUpload = (files) => {
+export const onUpload = (files = []) => {
+    if(files.length === 0) {
+        throw new Error("Missing files in array");
+    }
+
     const formData = new FormData();
     formData.append('count', files.length);
 
@@ -12,7 +16,10 @@ export const onUpload = (files) => {
     return axios.post("/upload", formData);
 };
 
-export const onDelete = (filePath) => {
+export const onDelete = (filePath = undefined) => {
+    if(filePath === undefined) {
+        throw new Error("Missing file path");
+    }
     return axios({
         method: "DELETE",
         url: "/upload/delete",

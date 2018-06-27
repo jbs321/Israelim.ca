@@ -1,44 +1,49 @@
 import React from 'react'
 import {onDelete, onUpload} from '../actions/Files'
 import FileUpload from '../components/fileUpload/FileUpload'
-import axios from 'axios'
 import _ from 'lodash'
 
 export default class FileUploadPageTest extends React.Component {
     state = {
-        uploaded: {},
-        selectedImages: [],
+        images: {}
     };
 
     onUpload = (files) => {
-        let that = this;
+        const {images} = this.state;
+        let newState = {};
 
-        files = files.filter((file) => {
-            return !_.has(that.state.data, file.name);
+        let filtered = _.filter(files, (file) => {
+            return !Object.keys(images).includes(file.name);
         });
 
-        if (files.length === 0) return;
+        if (filtered.length === 0) {
+            return;
+        }
 
-        onUpload(files).then((data) => {
+        onUpload(filtered).then((data) => {
             let uploaded = data.data;
-            this.setState({
-                uploaded: _.assign(that.state.uploaded, uploaded),
-                selectedImages: files.map(file => file.name),
+
+            _.each(uploaded, (path, name) => {
+                newState = _.assign(images, {
+                    [name]: {
+                        uploaded: true,
+                        path
+                    }
+                })
             });
+
+            this.setState({images: newState});
         });
     };
 
     onDelete = (file) => {
-        let {uploaded, selectedImages} = this.state;
-        const filePath = uploaded[file.name];
+        let {images} = this.state;
+        const filePath = _.find(images, (item, name) => name === file.name).path;
 
         onDelete(filePath).then(data => {
-            _.pull(selectedImages, file.name);
-
-            this.setState({
-                uploaded: _.omit(uploaded, [file.name]),
-                selectedImages: selectedImages,
-            });
+            let deletedPath = data.data;
+            let filtered = _.pickBy(images, (img) => img.path !== deletedPath);
+            this.setState({images: filtered});
         });
     };
 

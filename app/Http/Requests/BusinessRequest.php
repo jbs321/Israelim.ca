@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Business;
+use Illuminate\Support\Facades\Auth;
+
 class BusinessRequest extends FormRequest
 {
     /**
@@ -13,7 +15,7 @@ class BusinessRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::check();
     }
 
     /**
