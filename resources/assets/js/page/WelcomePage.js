@@ -36,7 +36,7 @@ const styles = (theme) => ({
     }
 );
 
-class Welcome extends React.Component {
+class WelcomePage extends React.Component {
     componentDidMount() {
         this.props.getAllBusiness();
     }
@@ -66,4 +66,4 @@ function mapStateToProps(state) {
     return state;
 }
 
-export default withStyles(styles, {withTheme: true})(connect(mapStateToProps, {getAllBusiness})(Welcome));
+export default withStyles(styles, {withTheme: true})(connect(mapStateToProps, {getAllBusiness})(WelcomePage));

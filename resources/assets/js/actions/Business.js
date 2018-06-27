@@ -1,5 +1,4 @@
 import axios from "axios/index";
-import Pagination, {NEXT_PAGE_URL, CURRENT_PAGE, LAST_PAGE} from "../dataset/pagination";
 
 let qs = require('qs');
 

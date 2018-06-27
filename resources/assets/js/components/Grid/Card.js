@@ -1,6 +1,7 @@
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import {Link} from 'react-router-dom';
 
 const styles = (themes) => ({
     outerWrapper: {
@@ -23,14 +24,27 @@ const styles = (themes) => ({
 
 class Card extends React.Component {
     render() {
-        const {classes, city, province} = this.props;
-        return (
-            <div className={classes.outerWrapper + " m-2 my-4"}>
-                <div className={classes.imageWrapper} style={{backgroundImage: 'url("https://material-ui.com/static/images/grid-list/camera.jpg")'}}></div>
+        const {classes, city, province, images, idx} = this.props;
 
-                <div><Typography align="left" variant="caption">{`${province} - ${city}`}</Typography></div>
-                <div><Typography gutterBottom align="left" variant="body2">{this.props.name}</Typography></div>
-            </div>
+        let backgroundImage = 'url("https://material-ui.com/static/images/grid-list/camera.jpg")';
+
+        if (images[0] !== undefined) {
+            let imageId = images[0].id;
+
+            if (imageId !== undefined) {
+                backgroundImage = `url("file/${imageId}")`;
+            }
+        }
+
+        return (
+            <Link to={`/business/${idx}`} target="_blank">
+                <div className={classes.outerWrapper + " m-2 my-4"}>
+                    <div className={classes.imageWrapper} style={{backgroundImage}}></div>
+
+                    <div><Typography align="left" variant="caption">{`${province} - ${city}`}</Typography></div>
+                    <div><Typography gutterBottom align="left" variant="body2">{this.props.name}</Typography></div>
+                </div>
+            </Link>
         );
     }
 }

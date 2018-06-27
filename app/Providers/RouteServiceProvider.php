@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\BusinessFile;
 use App\UserLog;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('user_log', function ($value) {
             return UserLog::where('id', Crypt::decryptString($value))->first() ?? abort(404);
         });
+
+        Route::model('businessFile', BusinessFile::class);
     }
 
     /**

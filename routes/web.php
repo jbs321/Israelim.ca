@@ -12,6 +12,7 @@
 */
 
 Route::get('/file', 'FileController@show');
+Route::get('/file/{businessFile}', 'FileController@showBusinessImage');
 Route::get('/profile/{name}', 'ProfileImageController@index');
 
 Route::get( '/{any}', function () {

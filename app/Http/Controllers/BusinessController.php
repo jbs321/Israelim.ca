@@ -6,8 +6,8 @@ use App\Business;
 use App\BusinessFile;
 use App\FileUpload;
 use App\Http\Requests\BusinessRequest;
-use function Couchbase\defaultDecoder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +20,20 @@ class BusinessController extends Controller
         $this->middleware(StartSession::class);
     }
 
+    public function show(Request $request, Business $business)
+    {
+        $business->images;
+
+        return new JsonResponse($business);
+    }
+    
     public function index()
     {
         /** @var Collection $list */
         $list = Business::paginate(8);
 
         $list->each(function (Business &$item, $key) {
+            $item->images;
             $item->idx = $key;
 
             return $item;

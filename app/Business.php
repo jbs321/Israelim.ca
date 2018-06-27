@@ -43,7 +43,7 @@ class Business extends Model
         return $this->hasOne(User::class);
     }
 
-    public function business()
+    public function images()
     {
         return $this->hasMany(BusinessFile::class);
     }
