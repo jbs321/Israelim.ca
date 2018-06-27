@@ -9,8 +9,8 @@ import businessReducer from './Business';
 const rootReducer = combineReducers({
     form: formReducer,
     user: userReducer,
-    isAuth: authReducer,
     login: loginReducer,
+    isAuth: authReducer,
     register: registrationReducer,
     business: businessReducer,
 });

@@ -11,7 +11,7 @@
 |
 */
 
-
+Route::get('/file', 'FileController@show');
 Route::get('/profile/{name}', 'ProfileImageController@index');
 
 Route::get( '/{any}', function () {

@@ -17,7 +17,6 @@ Route::post('/ping', function (Request $request) {
     return new \Illuminate\Http\JsonResponse(["pong" => [1, 2, 3, 4]]);
 });
 
-
 Route::post('/business', 'BusinessController@index');
 
 Route::post('/register', 'Auth\RegisterController@create');
@@ -33,6 +32,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('posts/{post}/delete', 'PostController@destroy');
 
     Route::post('posts/{post}/uploadImages', 'PostImageController@saveImages');
+
+    Route::post('/upload', 'UploadController@uploadImages');
+    Route::delete('/upload/delete', 'UploadController@deleteFile');
 
     Route::prefix('business')->group(function () {
         Route::post('/register', 'BusinessController@create');

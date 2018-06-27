@@ -3,21 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Business;
+use App\BusinessFile;
+use App\FileUpload;
 use App\Http\Requests\BusinessRequest;
 use function Couchbase\defaultDecoder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BusinessController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(StartSession::class);
+    }
+
     public function index()
     {
         /** @var Collection $list */
-        $list = Business::paginate(5);
+        $list = Business::paginate(8);
 
-        $list->each(function(Business &$item, $key) {
+        $list->each(function (Business &$item, $key) {
             $item->idx = $key;
+
             return $item;
         });
 
@@ -26,11 +36,46 @@ class BusinessController extends Controller
 
     public function create(BusinessRequest $request)
     {
-        $details = $request->all();
-        $details[Business::FIELD_USER_ID] = Auth::user()->id;
-        $business = new Business();
+        $token                            = $request->session()->token();
+        $details                          = $request->all();
+        $userId                           = Auth::user()->id;
+        $details[Business::FIELD_USER_ID] = $userId;
+        $business                         = new Business();
         $business->fill($details);
         $business->save();
+
+        $paths = explode(",", $details['images']);
+
+        foreach ($paths as $key => $path) {
+
+            /** @var FileUpload $fileUpload */
+            $fileUpload = FileUpload::where("path", $path)->firstOrFail();
+
+            if (strpos($path, $token) === false) {
+                $fileUpload->{FileUpload::FIELD__ERROR_MESSAGE} = "Wrong session save attempt";
+            } else {
+                //old/new paths
+                $tmpPath   = $fileUpload->{FileUpload::FIELD__PATH};
+                $extension = explode(".", $tmpPath)[1];
+                $newPath   = UploadController::PATH_BUSINESS_IMAGES . "/$business->id/$userId/$key.$extension";
+
+                //move file to new destination
+                Storage::move($tmpPath, $newPath);
+
+                //save new File Location
+                $fileUpload->{FileUpload::FIELD__PATH} = $newPath;
+
+                //save business file
+                $businessFile = new BusinessFile();
+                $businessFile->fill($fileUpload->toArray());
+                $businessFile->{BusinessFile::FIELD__BUSINESS_ID} = $business->id;
+                $businessFile->save();
+            }
+
+            $fileUpload->save();
+        }
+
+        Storage::deleteDirectory(UploadController::PATH_TEMP_IMAGES . "/$token");
 
         return new JsonResponse($business);
     }
