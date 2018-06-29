@@ -1,17 +1,15 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import Avatar from 'material-ui/Avatar';
 import {fetchUserDetails} from '../actions/User';
 import {
-    blue300,
-    indigo900,
-    orange200,
     deepOrange300,
-    pink400,
     purple500,
 } from 'material-ui/styles/colors';
+import withPageWrapper from "../HOC/withPageWrapper";
 
 const style = {margin: 5};
 
@@ -30,7 +28,7 @@ class ProfilePage extends React.Component {
         }
 
         return (
-            <div className={"page profile-page"}>
+            <div>
                 <Card>
                     <CardHeader
                         title={name.toUpperCase()}
@@ -57,8 +55,9 @@ class ProfilePage extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return state;
-}
+const enhance = compose(
+    withPageWrapper,
+    connect(state => state, {fetchUserDetails})
+)(ProfilePage);
 
-export default connect(mapStateToProps, {fetchUserDetails})(ProfilePage);
+export default enhance;

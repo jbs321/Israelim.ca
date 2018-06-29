@@ -12,6 +12,7 @@ import Register from "./Register";
 import RegisterBusinessInformation from "./RegisterBusinessInformation";
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import {compose} from 'recompose'
 
 import {FORM__REGISTER_USER} from './Register';
 import {FORM__REGISTER_BUSINESS_INFO} from './RegisterBusinessInformation';
@@ -135,13 +136,14 @@ class FullRegistrationStepper extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return state;
-}
-
 FullRegistrationStepper.propTypes = {
     register: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, {stepBack, submit, stepForward})(withStyles(styles)(FullRegistrationStepper));
+const enhance = compose(
+    connect(state => state, {stepBack, submit, stepForward}),
+    withStyles(styles),
+)(FullRegistrationStepper);
+
+export default enhance;

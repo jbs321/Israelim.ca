@@ -53,7 +53,6 @@ export default class FileUploadPageTest extends React.Component {
                 Upload:
                 <FileUpload onChange={this.onUpload} onDelete={this.onDelete}/>
                 {JSON.stringify(this.state.uploaded)}
-                {JSON.stringify(this.state.selectedImages)}
             </div>
         )
     }

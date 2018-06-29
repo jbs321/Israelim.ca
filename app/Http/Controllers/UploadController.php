@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
@@ -28,7 +27,6 @@ class UploadController extends Controller
     public function __construct()
     {
         //make sure the request returns files array
-        $this->middleware(FileArrayValidationMiddleware::class);
         $this->middleware(StartSession::class);
     }
 

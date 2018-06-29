@@ -10,8 +10,7 @@ export function fetchAuth(cb = undefined) {
     let access_token = localStorage.getItem('access_token');
     let token = token_type + " " + access_token;
 
-    if (_.has(localStorage, 'token_type')
-        && _.has(localStorage, 'access_token')) {
+    if (_.has(localStorage, 'token_type') && _.has(localStorage, 'access_token')) {
         isAuth = true;
     }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {compose} from 'recompose'
 import {Form, Field, reduxForm} from 'redux-form';
 import TextField from "../fields/TextField";
 import PhoneField from "../fields/PhoneField";
@@ -9,6 +10,7 @@ import {validateBusiness as validate} from './RegistrationValidation';
 import Typography from '@material-ui/core/Typography';
 import FileUpload from '../../components/fileUpload/FileUpload';
 import _ from "lodash";
+import PropTypes from "prop-types";
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
@@ -61,23 +63,20 @@ class RegisterBusinessInformation extends React.Component {
     };
 
     render() {
-        const {valid, handleSubmit, registerBusiness} = this.props;
-        const {images} = this.state;
-        const that = this;
+        const {handleSubmit, registerBusiness} = this.props;
+        const {images, selected} = this.state;
 
-        const onSubmitCallback = () => {
+        const onSubmitCallback = (data) => {
             const {onSubmit} = this.props;
 
             if (onSubmit !== undefined) {
-                onSubmit();
+                onSubmit(data);
             }
         };
 
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
-                    const {images, selected} = that.state;
-
                     let filtered = _.pickBy(images, (image, name) => {
                         return selected.includes(name);
                     });
@@ -130,27 +129,23 @@ class RegisterBusinessInformation extends React.Component {
                         label="Industry"
                         component={TextField}/>
 
-                    <div className={"row"}>
-                        <div className={"col p-0 m-0"}>
-                            <Typography caption={"subheading"}>Upload Business Images</Typography>
-                            <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete}/>
-                        </div>
+                    <div className={"col p-0 m-0"}>
+                        <Typography caption={"subheading"}>Upload Business Images</Typography>
+                        <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete}/>
                     </div>
 
-                    <button type="submit" disabled={!valid}>Regsiter</button>
+                    {/*<button type="submit" disabled={!valid}>Regsiter</button>*/}
                 </Form>
             </div>
         );
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        initialValues: state.register.business
-    };
-}
+RegisterBusinessInformation.propTypes = {
+    onRemoteSubmit: PropTypes.func,
+};
 
-RegisterBusinessInformation = reduxForm({
+const config = {
     form: FORM__REGISTER_BUSINESS_INFO,
     fields: [
         'city',
@@ -162,10 +157,11 @@ RegisterBusinessInformation = reduxForm({
     ],
     validate,
     destroyOnUnmount: false,
-})(RegisterBusinessInformation);
+};
 
-RegisterBusinessInformation = connect(mapStateToProps, {registerBusiness})(RegisterBusinessInformation);
+const enhance = compose(
+    reduxForm(config),
+    connect(state => ({initialValues: state.register.business}), {registerBusiness}),
+)(RegisterBusinessInformation);
 
-
-
-export default RegisterBusinessInformation;
+export default enhance;

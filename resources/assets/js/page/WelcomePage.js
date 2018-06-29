@@ -2,8 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux'
 import {getAllBusiness} from '../actions/Business'
 import {withStyles} from '@material-ui/core/styles';
-import AppBar from '../components/AppBar';
 import SingleLineCardList from '../components/Grid/SignleLineCardList'
+import withAppBar from "../HOC/WithAppBar";
+import {compose} from 'recompose';
+import withPageWrapper from "../HOC/withPageWrapper";
 
 const styles = (theme) => ({
         container: {
@@ -45,11 +47,7 @@ class WelcomePage extends React.Component {
         const {classes, business} = this.props;
 
         return (
-            <div className={"container-fluid p-0"}>
-                <header className={classes.header}>
-                    <AppBar/>
-                </header>
-
+            <div>
                 <section className={classes.businessAroundTheWorldSection + " mt-3 "}>
                     <SingleLineCardList list={business.list}/>
                 </section>
@@ -62,8 +60,12 @@ class WelcomePage extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return state;
-}
+const enhance = compose(
+    connect(state => state, {getAllBusiness}),
+    withAppBar,
+    withPageWrapper,
+    withStyles(styles, {withTheme: true})
+);
 
-export default withStyles(styles, {withTheme: true})(connect(mapStateToProps, {getAllBusiness})(WelcomePage));
+export default enhance(WelcomePage);
+

@@ -26,7 +26,7 @@ class BusinessController extends Controller
 
         return new JsonResponse($business);
     }
-    
+
     public function index()
     {
         /** @var Collection $list */
@@ -34,7 +34,7 @@ class BusinessController extends Controller
 
         $list->each(function (Business &$item, $key) {
             $item->images;
-            $item->idx = $key;
+            $item->idx = encrypt($item->id);
 
             return $item;
         });
@@ -52,38 +52,40 @@ class BusinessController extends Controller
         $business->fill($details);
         $business->save();
 
-        $paths = explode(",", $details['images']);
+        if (isset($details['images'])) {
+            $paths = explode(",", $details['images']);
 
-        foreach ($paths as $key => $path) {
+            foreach ($paths as $key => $path) {
 
-            /** @var FileUpload $fileUpload */
-            $fileUpload = FileUpload::where("path", $path)->firstOrFail();
+                /** @var FileUpload $fileUpload */
+                $fileUpload = FileUpload::where("path", $path)->firstOrFail();
 
-            if (strpos($path, $token) === false) {
-                $fileUpload->{FileUpload::FIELD__ERROR_MESSAGE} = "Wrong session save attempt";
-            } else {
-                //old/new paths
-                $tmpPath   = $fileUpload->{FileUpload::FIELD__PATH};
-                $extension = explode(".", $tmpPath)[1];
-                $newPath   = UploadController::PATH_BUSINESS_IMAGES . "/$business->id/$userId/$key.$extension";
+                if (strpos($path, $token) === false) {
+                    $fileUpload->{FileUpload::FIELD__ERROR_MESSAGE} = "Wrong session save attempt";
+                } else {
+                    //old/new paths
+                    $tmpPath   = $fileUpload->{FileUpload::FIELD__PATH};
+                    $extension = explode(".", $tmpPath)[1];
+                    $newPath   = UploadController::PATH_BUSINESS_IMAGES . "/$business->id/$userId/$key.$extension";
 
-                //move file to new destination
-                Storage::move($tmpPath, $newPath);
+                    //move file to new destination
+                    Storage::move($tmpPath, $newPath);
 
-                //save new File Location
-                $fileUpload->{FileUpload::FIELD__PATH} = $newPath;
+                    //save new File Location
+                    $fileUpload->{FileUpload::FIELD__PATH} = $newPath;
 
-                //save business file
-                $businessFile = new BusinessFile();
-                $businessFile->fill($fileUpload->toArray());
-                $businessFile->{BusinessFile::FIELD__BUSINESS_ID} = $business->id;
-                $businessFile->save();
+                    //save business file
+                    $businessFile = new BusinessFile();
+                    $businessFile->fill($fileUpload->toArray());
+                    $businessFile->{BusinessFile::FIELD__BUSINESS_ID} = $business->id;
+                    $businessFile->save();
+                }
+
+                $fileUpload->save();
             }
 
-            $fileUpload->save();
+            Storage::deleteDirectory(UploadController::PATH_TEMP_IMAGES . "/$token");
         }
-
-        Storage::deleteDirectory(UploadController::PATH_TEMP_IMAGES . "/$token");
 
         return new JsonResponse($business);
     }

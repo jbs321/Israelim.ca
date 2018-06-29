@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Pagination from '../dataset/pagination';
+import Pagination from '../types/pagination';
 import {
     GET_ALL_BUSINESS
 } from '../actions/Business';

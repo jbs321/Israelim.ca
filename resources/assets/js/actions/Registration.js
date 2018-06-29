@@ -68,7 +68,6 @@ export function registerUser(user) {
 }
 
 export function registerBusiness(cb = undefined, images, business) {
-    console.log(this);
     let form = new FormData();
     form.append("name", business.name);
     form.append("province", business.province);
@@ -93,7 +92,7 @@ export function registerBusiness(cb = undefined, images, business) {
 
     //Trigger Callback
     request.then(data => {
-        cb();
+        cb(data.data);
     });
 
     return {

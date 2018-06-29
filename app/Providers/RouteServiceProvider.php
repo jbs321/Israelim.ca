@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Business;
 use App\BusinessFile;
 use App\UserLog;
 use Illuminate\Support\Facades\Crypt;
@@ -28,11 +29,16 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        Route::bind('user_log', function ($value) {
-            return UserLog::where('id', Crypt::decryptString($value))->first() ?? abort(404);
-        });
+//        Route::bind('user_log', function ($value) {
+//            return UserLog::where('id', Crypt::decryptString($value))->first() ?? abort(404);
+//        });
 
         Route::model('businessFile', BusinessFile::class);
+
+        Route::bind('business', function ($encryptedId) {
+            $id = decrypt($encryptedId);
+            return Business::where('id', $id)->first() ?? abort(404);
+        });
     }
 
     /**

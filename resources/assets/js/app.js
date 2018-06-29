@@ -1,6 +1,5 @@
 import React from 'react';
-import State from './tools/state';
-import Routes from './Routes';
+import {ProtectedRoutes} from './Routes';
 import AuthBoundary from './components/AuthBoundary';
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -10,7 +9,7 @@ export default class App extends React.Component {
             <div className="app">
                 <ErrorBoundary>
                     <AuthBoundary>
-                        <Routes/>
+                        <ProtectedRoutes/>
                     </AuthBoundary>
                 </ErrorBoundary>
             </div>

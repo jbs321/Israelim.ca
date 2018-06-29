@@ -1,6 +1,9 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import {fetchAuth} from "../actions/Auth";
+import React from 'react'
+import PropTypes from "prop-types";
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
+import {fetchAuth} from "../actions/Auth"
+import {NotProtectedRoutes} from "../Routes"
 
 class AuthBoundary extends React.Component {
     componentDidMount() {
@@ -8,13 +11,18 @@ class AuthBoundary extends React.Component {
     }
 
     render() {
-        //handle Autherized here or continue
-        return this.props.children;
+        const {isAuth, children} = this.props;
+
+        return isAuth ? children : <NotProtectedRoutes/>;
     }
 }
 
-function mapStateToProps(state) {
-    return state;
-}
+AuthBoundary.propTypes = {
+    isAuth: PropTypes.bool.isRequired,
+};
 
-export default connect(mapStateToProps, {fetchAuth})(AuthBoundary);
+const enhance = compose(
+    connect(state => state, {fetchAuth})
+)(AuthBoundary);
+
+export default enhance;

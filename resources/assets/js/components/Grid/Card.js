@@ -32,14 +32,16 @@ class Card extends React.Component {
             let imageId = images[0].id;
 
             if (imageId !== undefined) {
-                backgroundImage = `url("file/${imageId}")`;
+                backgroundImage = `url("file/${imageId}"), url("http://backgroundcheckall.com/wp-content/uploads/2017/12/animated-loading-bar-gif-transparent-background-2.gif")`;
             }
         }
 
         return (
             <Link to={`/business/${idx}`} target="_blank">
-                <div className={classes.outerWrapper + " m-2 my-4"}>
-                    <div className={classes.imageWrapper} style={{backgroundImage}}></div>
+                <div className={classes.outerWrapper + " m-2 my-4"} style={{background: "radial-gradient(circle, rgb(255, 255, 255), #8080b9, #d29b9b)"}}>
+                    <div className={classes.imageWrapper} style={{backgroundImage, backgroundPosition: "center center"}}></div>
+                    {/*<div className={classes.imageWrapper} style={{backgroundImage, backgroundPosition: "center center"}}></div>*/}
+                    {/*<div className={classes.imageWrapper} style={{backgroundColor: "#f3f3f3",backgroundImage, backgroundPosition: "center center"}}></div>*/}
 
                     <div><Typography align="left" variant="caption">{`${province} - ${city}`}</Typography></div>
                     <div><Typography gutterBottom align="left" variant="body2">{this.props.name}</Typography></div>

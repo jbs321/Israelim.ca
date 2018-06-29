@@ -7,7 +7,6 @@ export const REGISTER = "register";
 let qs = require('qs');
 
 const {
-    APP_URL,
     REACT_AUTH_CONFIG_CLIENT_ID,
     REACT_AUTH_CONFIG_CLIENT_SECRET
 } = process.env.ENV;

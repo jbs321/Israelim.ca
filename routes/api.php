@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Middleware\FileArrayValidationMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ Route::post('/ping', function (Request $request) {
 });
 
 Route::post('/business', 'BusinessController@index');
-Route::post('/business/{business}', 'BusinessController@show');
+Route::get('/business/{business}', 'BusinessController@show');
 
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/register/update', 'Auth\RegisterController@update');
@@ -34,7 +35,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('posts/{post}/uploadImages', 'PostImageController@saveImages');
 
-    Route::post('/upload', 'UploadController@uploadImages');
+    Route::post('/upload', 'UploadController@uploadImages')->middleware([FileArrayValidationMiddleware::class]);
     Route::delete('/upload/delete', 'UploadController@deleteFile');
 
     Route::prefix('business')->group(function () {
