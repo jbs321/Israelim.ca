@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
-class RegisterBusinessInformation extends React.Component {
+class RegisterBusinessInformationForm extends React.Component {
     state = {
         images: {},
         selected: [],
@@ -141,7 +141,7 @@ class RegisterBusinessInformation extends React.Component {
     }
 }
 
-RegisterBusinessInformation.propTypes = {
+RegisterBusinessInformationForm.propTypes = {
     onRemoteSubmit: PropTypes.func,
 };
 
@@ -162,6 +162,6 @@ const config = {
 const enhance = compose(
     reduxForm(config),
     connect(state => ({initialValues: state.register.business}), {registerBusiness}),
-)(RegisterBusinessInformation);
+)(RegisterBusinessInformationForm);
 
 export default enhance;

@@ -9,13 +9,13 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Register from "./Register";
-import RegisterBusinessInformation from "./RegisterBusinessInformation";
+import RegisterBusinessInformation from "./RegisterBusinessInformationForm";
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import {compose} from 'recompose'
 
 import {FORM__REGISTER_USER} from './Register';
-import {FORM__REGISTER_BUSINESS_INFO} from './RegisterBusinessInformation';
+import {FORM__REGISTER_BUSINESS_INFO} from './RegisterBusinessInformationForm';
 
 const styles = theme => ({
     root: {

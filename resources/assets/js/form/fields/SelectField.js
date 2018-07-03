@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import {withStyles} from '@material-ui/core/styles';
 import {mergeClass} from "../../helpers/styles";
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import _ from 'lodash'
 
 const styles = () => ({
     fieldContainer: {
@@ -13,9 +15,9 @@ const styles = () => ({
     }
 });
 
-class TextField extends React.Component {
+class SelectField extends React.Component {
     render() {
-        const {classes: {fieldContainer}, meta: {touched, error}, label, input, placeholder} = this.props;
+        const {classes: {fieldContainer}, meta: {touched, error}, label, input, placeholder, initEmpty = true, options} = this.props;
         const id = mergeClass(input.name, "_helperText");
         let hasError = false;
         let errorMsg = null;
@@ -25,11 +27,24 @@ class TextField extends React.Component {
             errorMsg = <FormHelperText id={id}>{error}</FormHelperText>;
         }
 
+        let optionArr = _.map(options, (key, val) => {
+            return <MenuItem key={key} value={key}>{val}</MenuItem>;
+        });
+
+        let emptyElm = initEmpty ? <MenuItem value=""><em>None</em></MenuItem>: null;
+
         return (
             <div className={fieldContainer}>
                 <FormControl error={hasError} aria-describedby={id} fullWidth>
                     <InputLabel htmlFor={id}>{label}</InputLabel>
-                    <Input placeholder={placeholder} {...input}/>
+                    <Select
+                        placeholder={placeholder}
+                        {...input}
+                    >
+                        {emptyElm}
+                        {optionArr}
+                    </Select>
+
                     {errorMsg}
                 </FormControl>
             </div>
@@ -37,8 +52,8 @@ class TextField extends React.Component {
     };
 }
 
-TextField.propTypes = {
+SelectField.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextField);
+export default withStyles(styles)(SelectField);

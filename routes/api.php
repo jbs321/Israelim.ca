@@ -18,6 +18,8 @@ Route::post('/ping', function (Request $request) {
     return new \Illuminate\Http\JsonResponse(["pong" => [1, 2, 3, 4]]);
 });
 
+Route::get('/address/{query}', 'GooglePlacesController@findAddress');
+
 Route::post('/business', 'BusinessController@index');
 Route::get('/business/{business}', 'BusinessController@show');
 
@@ -39,11 +41,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('/upload/delete', 'UploadController@deleteFile');
 
     Route::prefix('business')->group(function () {
-        Route::post('/register', 'BusinessController@create');
-        Route::post('/register/update', 'BusinessController@update');
-        Route::post('/register/delete', 'BusinessController@delete');
+        Route::prefix('register')->group(function () {
+            Route::post('general', 'BusinessController@create');
+            Route::put('/general', 'BusinessController@update');
+            Route::delete('/general', 'BusinessController@delete');
+
+            Route::post('location', 'BusinessLocationController@create');
+        });
     });
 });
 
 
 
+Route::post('business/register/location', 'BusinessLocationController@create');

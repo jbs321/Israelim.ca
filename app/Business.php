@@ -10,12 +10,10 @@ class Business extends Model
     const FIELD_PHONE_NUMBER = "phone_number";
     const FIELD_NAME = "name";
     const FIELD_EMAIL = "email";
-    const FIELD_ADDRESS = "address";
     const FIELD_USER_ID = "user_id";
-    const FIELD_PROVINCE = "province";
-    const FIELD_CITY = "city";
-    const FIELD_COUNTRY = "country";
     const FIELD_INDUSTRY = "industry";
+
+    const TABLE_NAME = "business";
 
     protected $table = "business";
 
@@ -23,11 +21,7 @@ class Business extends Model
         self::FIELD_PHONE_NUMBER,
         self::FIELD_NAME,
         self::FIELD_EMAIL,
-        self::FIELD_ADDRESS,
         self::FIELD_USER_ID,
-        self::FIELD_PROVINCE,
-        self::FIELD_CITY,
-        self::FIELD_COUNTRY,
         self::FIELD_INDUSTRY,
     ];
 
@@ -46,5 +40,10 @@ class Business extends Model
     public function images()
     {
         return $this->hasMany(BusinessFile::class);
+    }
+
+    public function location()
+    {
+        return $this->hasOne(BusinessLocation::class);
     }
 }

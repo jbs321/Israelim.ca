@@ -19,11 +19,7 @@ class CreateBusinessTable extends Migration
             $table->string(Business::FIELD_NAME);
             $table->string(Business::FIELD_EMAIL);
             $table->string(Business::FIELD_PHONE_NUMBER);
-            $table->string(Business::FIELD_ADDRESS);
-            $table->string(Business::FIELD_PROVINCE);
             $table->integer(Business::FIELD_USER_ID);
-            $table->string(Business::FIELD_CITY);
-            $table->string(Business::FIELD_COUNTRY);
             $table->string(Business::FIELD_INDUSTRY);
             $table->timestamps();
         });

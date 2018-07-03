@@ -3,18 +3,21 @@ import {compose} from 'recompose';
 import {submit} from 'redux-form';
 import withPageWrapper from "../HOC/withPageWrapper";
 import {LinearDeterminateStepper} from "../components/Stepper/LinearDeterminateStepper";
-import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformation";
+import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformationForm";
+import RegisterBusinessLocationForm, {FORM__REGISTER_BUSINESS_LOCATION} from "../form/Registration/RegisterBusinessLocationForm";
 import {connect} from "react-redux";
+import MapContainer from '../components/Google/MapContainer'
 
 const STEP__GENERAL_INFORMATION = 1;
 const STEP__LOCATION = 2;
-const STEP__OPEN_HOURS = 3;
-const STEP__BUSINESS_DESCRIPTION = 4;
-const STEP__PAYMENT = 5;
+const STEP__LOCATION_CONFIRMATION = 3;
+const STEP__OPEN_HOURS = 4;
+const STEP__BUSINESS_DESCRIPTION = 5;
+const STEP__PAYMENT = 6;
 
 class BusinessRegisterPage extends React.Component {
     state = {
-        activeStep: STEP__GENERAL_INFORMATION,
+        activeStep: STEP__LOCATION_CONFIRMATION,
         steps: {
             [STEP__GENERAL_INFORMATION]: {
                 label: "General Information",
@@ -23,8 +26,12 @@ class BusinessRegisterPage extends React.Component {
             },
             [STEP__LOCATION]: {
                 label: "Location",
-                formId: "",
-                content: <div>Location</div>,
+                formId: FORM__REGISTER_BUSINESS_LOCATION,
+                content: <RegisterBusinessLocationForm onSubmit={(data) => this.handleFormSubmit(data)}/>,
+            },
+            [STEP__LOCATION_CONFIRMATION]: {
+                label: "Location Confirmation",
+                content: <MapContainer/>,
             },
             [STEP__OPEN_HOURS]: {
                 label: "Open Hours",
@@ -56,7 +63,7 @@ class BusinessRegisterPage extends React.Component {
         return (
             <div className={"stepper-wrapper"}>
                 <LinearDeterminateStepper steps={steps}
-                                          activeStep={activeStep}
+                                          activeStep={STEP__LOCATION_CONFIRMATION}
                                           stepForward={() => {
                                               this.props.submit(steps[activeStep].formId);
                                           }}

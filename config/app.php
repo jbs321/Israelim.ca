@@ -163,7 +163,7 @@ return [
 
         //custom
         Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class,
-
+        \Google\Providers\GoogleServiceProvider::class,
     ],
 
     /*
@@ -212,6 +212,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        //custom
+        'Google' => \Google\Facades\Google::class
 
     ],
 

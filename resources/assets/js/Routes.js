@@ -2,7 +2,7 @@ import React from 'react';
 import {Switch, Route} from 'react-router-dom';
 import Login from "./form/Login";
 import WelcomePage from "./page/WelcomePage";
-import RegisterBusinessInformation from "./form/Registration/RegisterBusinessInformation";
+import RegisterBusinessInformation from "./form/Registration/RegisterBusinessInformationForm";
 import FileUploadPageTest from "./page/FileUploadPageTest";
 import BusinessViewPage from "./page/BusinessViewPage";
 import FullRegistrationStepper from "./form/Registration/FullRegistrationStepper";
