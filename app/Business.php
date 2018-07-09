@@ -42,8 +42,12 @@ class Business extends Model
         return $this->hasMany(BusinessFile::class);
     }
 
+    /**
+     * https://laravel.com/docs/5.6/eloquent-relationships#polymorphic-relations
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
     public function location()
     {
-        return $this->hasOne(BusinessLocation::class);
+        return $this->morphOne(Location::class, 'related');
     }
 }

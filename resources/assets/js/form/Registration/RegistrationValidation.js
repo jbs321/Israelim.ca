@@ -43,10 +43,7 @@ export const validateBusiness = values => {
     const requiredFields = [
         'name',
         'email',
-        'city',
-        'province',
         'phone_number',
-        'street_address',
         'industry',
     ];
 

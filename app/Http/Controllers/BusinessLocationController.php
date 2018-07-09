@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business;
-use App\BusinessLocation;
+use App\Location;
 use App\Http\Requests\BusinessLocationRequest;
 use Google\Facades\Google;
 use Google\Types\GooglePlacesResponse;
@@ -20,15 +20,16 @@ class BusinessLocationController extends Controller
      */
     public function create(BusinessLocationRequest $request)
     {
-        $location = new BusinessLocation();
+        $location = new Location();
         $location->fill($request->all());
+        $location->{Location::FIELD_RELATED_TYPE} = Business::class;
 
         $query = join(", ", [
-            $location->{BusinessLocation::FIELD_COUNTRY},
-            $location->{BusinessLocation::FIELD_PROVINCE},
-            $location->{BusinessLocation::FIELD_CITY},
-            $location->{BusinessLocation::FIELD_ADDRESS},
-            $location->{BusinessLocation::FIELD_POSTAL_CODE},
+            $location->{Location::FIELD_COUNTRY},
+            $location->{Location::FIELD_PROVINCE},
+            $location->{Location::FIELD_CITY},
+            $location->{Location::FIELD_ADDRESS},
+            $location->{Location::FIELD_POSTAL_CODE},
         ]);
 
         $address = Google::placesAutoComplete()->findAddressByQuery($query);
@@ -41,26 +42,26 @@ class BusinessLocationController extends Controller
         /** @var GooglePlacesResult $location */
         $place = $place->getResults()->first();
 
-        $location->{BusinessLocation::FIELD_LAT} = $place->getLat();
-        $location->{BusinessLocation::FIELD_LNG} = $place->getLng();
-        BusinessLocation::updateOrCreate($location->toArray());
+        $location->{Location::FIELD_LAT} = $place->getLat();
+        $location->{Location::FIELD_LNG} = $place->getLng();
+        Location::updateOrCreate($location->toArray());
 
         /** @var Business $business */
-        $business = $location->business;
+        $business = $location->related;
         $business->location;
 
         return new JsonResponse($business);
     }
 
     /**
-     * @param BusinessLocation $businessLocation
+     * @param Location $businessLocation
      *
      * @return JsonResponse
      */
-    public function confirmLocation(BusinessLocation $businessLocation)
+    public function confirmLocation(Location $businessLocation)
     {
         $businessLocation->update([
-            BusinessLocation::FIELD_IS_CONFIRMED => true
+            Location::FIELD_IS_CONFIRMED => true
         ]);
 
         /** @var Business $business */

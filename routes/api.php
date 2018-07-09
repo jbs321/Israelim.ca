@@ -46,12 +46,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('/general', 'BusinessController@update');
             Route::delete('/general', 'BusinessController@delete');
 
-            Route::post('location/create', 'BusinessLocationController@create');
+            Route::post('location', 'BusinessLocationController@create');
             Route::post('location/confirm/{businessLocation}', 'BusinessLocationController@confirmLocation');
         });
     });
 });
-
-
-
-Route::post('business/register/location', 'BusinessLocationController@create');
