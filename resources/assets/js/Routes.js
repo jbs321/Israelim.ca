@@ -2,10 +2,7 @@ import React from 'react';
 import {Switch, Route} from 'react-router-dom';
 import Login from "./form/Login";
 import WelcomePage from "./page/WelcomePage";
-import RegisterBusinessInformation from "./form/Registration/RegisterBusinessInformationForm";
-import FileUploadPageTest from "./page/FileUploadPageTest";
 import BusinessViewPage from "./page/BusinessViewPage";
-import FullRegistrationStepper from "./form/Registration/FullRegistrationStepper";
 import BusinessRegisterPage from './page/BusinessRegisterPage'
 import NotFound from './page/NotFound'
 
@@ -20,8 +17,6 @@ export const Shared = () => (
 
 export const ProtectedRoutes = () => (
     <Switch>
-        <Route exact path="/register2" component={RegisterBusinessInformation}/>
-        <Route exact path="/register" component={FullRegistrationStepper}/>
         <Route exact path="/register/business" component={BusinessRegisterPage}/>
         <Shared/>
     </Switch>

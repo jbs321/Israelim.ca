@@ -5,33 +5,45 @@ import withPageWrapper from "../HOC/withPageWrapper";
 import {LinearDeterminateStepper} from "../components/Stepper/LinearDeterminateStepper";
 import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformationForm";
 import RegisterBusinessLocationForm, {FORM__REGISTER_BUSINESS_LOCATION} from "../form/Registration/RegisterBusinessLocationForm";
+import RegisterLocationConfirmationForm, {FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION} from "../form/Registration/RegisterLocationConfirmationForm";
 import {connect} from "react-redux";
-import MapContainer from '../components/Google/MapContainer'
 
-const STEP__GENERAL_INFORMATION = 1;
-const STEP__LOCATION = 2;
+const STEP__GENERAL_INFORMATION   = 1;
+const STEP__LOCATION              = 2;
 const STEP__LOCATION_CONFIRMATION = 3;
-const STEP__OPEN_HOURS = 4;
-const STEP__BUSINESS_DESCRIPTION = 5;
-const STEP__PAYMENT = 6;
+const STEP__OPEN_HOURS            = 4;
+const STEP__BUSINESS_DESCRIPTION  = 5;
+const STEP__PAYMENT               = 6;
 
 class BusinessRegisterPage extends React.Component {
+    handleFormSubmit = (data) => {
+        const {activeStep} = this.state;
+        const nextStep = activeStep + 1;
+
+        this.setState({
+            activeStep: nextStep,
+        });
+    };
+
     state = {
-        activeStep: STEP__LOCATION_CONFIRMATION,
+        activeStep: STEP__GENERAL_INFORMATION,
+        transport: {},
         steps: {
             [STEP__GENERAL_INFORMATION]: {
                 label: "General Information",
                 formId: FORM__REGISTER_BUSINESS_INFO,
-                content: <RegisterBusinessInformation onSubmit={(data) => this.handleFormSubmit(data)}/>,
+                content: <RegisterBusinessInformation onSubmit={this.handleFormSubmit.bind(this)} />,
             },
             [STEP__LOCATION]: {
                 label: "Location",
                 formId: FORM__REGISTER_BUSINESS_LOCATION,
-                content: <RegisterBusinessLocationForm onSubmit={(data) => this.handleFormSubmit(data)}/>,
+                content: <RegisterBusinessLocationForm onSubmit={this.handleFormSubmit.bind(this)}/>,
             },
             [STEP__LOCATION_CONFIRMATION]: {
                 label: "Location Confirmation",
-                content: <MapContainer/>,
+                formId: FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION,
+                content: <RegisterLocationConfirmationForm onSubmit={this.handleFormSubmit.bind(this)}/>,
+                buttonNextText: "Confirm Location",
             },
             [STEP__OPEN_HOURS]: {
                 label: "Open Hours",
@@ -51,21 +63,15 @@ class BusinessRegisterPage extends React.Component {
         },
     };
 
-    handleFormSubmit = (data) => {
-        let {activeStep} = this.state;
-        let next = activeStep + 1;
-        this.setState({activeStep: next});
-    };
-
     render() {
         let {activeStep, steps} = this.state;
-
+        const that = this;
         return (
             <div className={"stepper-wrapper"}>
                 <LinearDeterminateStepper steps={steps}
-                                          activeStep={STEP__LOCATION_CONFIRMATION}
+                                          activeStep={activeStep}
                                           stepForward={() => {
-                                              this.props.submit(steps[activeStep].formId);
+                                              that.props.submit(steps[activeStep].formId);
                                           }}
                                           stepBack={() => {
                                               let previous = activeStep - 1;

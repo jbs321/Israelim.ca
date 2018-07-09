@@ -87,7 +87,8 @@ class BusinessController extends Controller
             Storage::deleteDirectory(UploadController::PATH_TEMP_IMAGES . "/$token");
         }
 
-        return new JsonResponse($business);
+        $businessArr = array_merge($business->toArray(), ['business_id' => $business->id]);
+        return new JsonResponse($businessArr);
     }
 
     public function delete(Business $business)

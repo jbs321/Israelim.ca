@@ -4,6 +4,8 @@ var path = require('path');
 var BUILD_DIR = path.resolve(__dirname, 'public/js');
 var APP_DIR = path.resolve(__dirname, 'resources/assets/js');
 
+//TODO::move the react config to different .env file or location. => all access codes are visible
+//require('dotenv').config({path: '/full/custom/path/to/your/env/vars'})
 let env = require('dotenv').config();
 
 module.exports = {

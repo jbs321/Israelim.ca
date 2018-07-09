@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Form, Field, reduxForm} from 'redux-form';
-import {registerUser} from "../../actions/Registration";
+import {registerUser} from "../../actions/BusinessRegistration/Registration";
 import {asyncValidate, validate} from './RegistrationValidation';
 import TextField from '../fields/TextField';
 import PhoneNumberField from "../fields/PhoneField";

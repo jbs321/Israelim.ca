@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import {stepBack, stepForward} from '../../actions/Registration';
+import {stepBack, stepForward} from '../../actions/BusinessRegistration/Registration';
 import {connect} from 'react-redux';
 import {submit} from 'redux-form';
 import Stepper from '@material-ui/core/Stepper';

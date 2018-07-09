@@ -2,15 +2,15 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'recompose'
 import {Form, Field, reduxForm} from 'redux-form';
+import PropTypes from "prop-types";
 import TextField from "../fields/TextField";
 import PhoneField from "../fields/PhoneField";
 import {onUpload, onDelete} from '../../actions/Files';
-import {registerBusiness} from '../../actions/Registration';
+import {registerBusiness} from '../../actions/BusinessRegistration/RegisterBusinessInfo';
 import {validateBusiness as validate} from './RegistrationValidation';
 import Typography from '@material-ui/core/Typography';
 import FileUpload from '../../components/fileUpload/FileUpload';
 import _ from "lodash";
-import PropTypes from "prop-types";
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
@@ -22,17 +22,14 @@ class RegisterBusinessInformationForm extends React.Component {
 
     handleOnChange = (files) => {
         const {images} = this.state;
+
         let newState = {};
 
         this.setState({selected: files.map(file => file.name)});
 
-        let filtered = _.filter(files, (file) => {
-            return !Object.keys(images).includes(file.name);
-        });
+        let filtered = _.filter(files, (file) => !Object.keys(images).includes(file.name));
 
-        if (filtered.length === 0) {
-            return;
-        }
+        if (!filtered.length) return;
 
         onUpload(filtered).then((data) => {
             let uploaded = data.data;
@@ -51,9 +48,10 @@ class RegisterBusinessInformationForm extends React.Component {
     };
 
     handleOnDelete = (file) => {
-        let {images} = this.state;
         const filePath = _.find(images, (item, name) => name === file.name).path;
-        let that = this;
+
+        let {images} = this.state,
+            that = this;
 
         onDelete(filePath).then(data => {
             let deletedPath = data.data;
@@ -63,27 +61,16 @@ class RegisterBusinessInformationForm extends React.Component {
     };
 
     render() {
-        const {handleSubmit, registerBusiness} = this.props;
-        const {images, selected} = this.state;
-
-        const onSubmitCallback = (data) => {
-            const {onSubmit} = this.props;
-
-            if (onSubmit !== undefined) {
-                onSubmit(data);
-            }
-        };
+        const {handleSubmit, registerBusiness} = this.props,
+            {images, selected} = this.state;
 
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
-                    let filtered = _.pickBy(images, (image, name) => {
-                        return selected.includes(name);
-                    });
+                    let filtered = _.pickBy(images, (image, name) => selected.includes(name)),
+                        paths = _.map(filtered, image => image.path);
 
-                    let paths = _.map(filtered, image => image.path);
-
-                    registerBusiness(onSubmitCallback, paths, values);
+                    registerBusiness(data => this.props.onSubmit(data), paths, values);
                 })}>
                     <Field
                         name="name"
@@ -142,7 +129,7 @@ class RegisterBusinessInformationForm extends React.Component {
 }
 
 RegisterBusinessInformationForm.propTypes = {
-    onRemoteSubmit: PropTypes.func,
+    onSubmit: PropTypes.func.isRequired,
 };
 
 const config = {
@@ -161,7 +148,7 @@ const config = {
 
 const enhance = compose(
     reduxForm(config),
-    connect(state => ({initialValues: state.register.business}), {registerBusiness}),
+    connect(state => ({initialValues: state.registerBusiness}), {registerBusiness}),
 )(RegisterBusinessInformationForm);
 
 export default enhance;

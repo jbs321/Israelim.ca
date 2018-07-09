@@ -18,6 +18,9 @@ class BusinessLocation extends Model
     const FIELD_APARTMENT = "apartment";
     const FIELD_COUNTRY = "country";
     const FIELD_POSTAL_CODE = "postal_code";
+    const FIELD_LAT = "lat";
+    const FIELD_LNG = "lng";
+    const FIELD_IS_CONFIRMED = "is_confirmed";
 
 
     protected $fillable = [
@@ -27,10 +30,13 @@ class BusinessLocation extends Model
         self::FIELD_CITY,
         self::FIELD_APARTMENT,
         self::FIELD_POSTAL_CODE,
+        self::FIELD_LAT,
+        self::FIELD_LNG,
+        self::FIELD_IS_CONFIRMED,
     ];
 
     public function business()
     {
-        return $this->hasOne(Business::class);
+        return $this->hasOne(Business::class, Business::FIELD_ID, BusinessLocation::FIELD_BUSINESS_ID);
     }
 }

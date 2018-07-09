@@ -14,12 +14,14 @@ export const FORM__REGISTER_BUSINESS_LOCATION = "form__register_business_locatio
 class RegisterBusinessLocationForm extends React.Component {
     render() {
         const {handleSubmit} = this.props;
+        const that = this;
 
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
+                    values.business_id = that.props.business_id;
                     registerBusinessLocation(values, (data) => {
-                        console.log(data);
+                        that.props.onSubmit(data);
                     });
                 })}>
                     <Field
@@ -72,7 +74,8 @@ class RegisterBusinessLocationForm extends React.Component {
                         name="postal_code"
                         label="Postal Code"
                         placeholder={"e.g. T5H 3Z3"}
-                        component={PostalCodeField}/>
+                        component={PostalCodeField}
+                    />
 
                 </Form>
             </div>
@@ -81,17 +84,24 @@ class RegisterBusinessLocationForm extends React.Component {
 }
 
 RegisterBusinessLocationForm.propTypes = {
-    onRemoteSubmit: PropTypes.func,
+    onSubmit: PropTypes.func.isRequired,
 };
 
 const config = {
     form: FORM__REGISTER_BUSINESS_LOCATION,
-    fields: [],
+    fields: [
+        'business_id',
+        'postal_code',
+        'province',
+        'city',
+        'apt',
+        'street_address',
+    ],
     validate,
     destroyOnUnmount: false,
 };
 
 export default compose(
     reduxForm(config),
-    connect(state => state, {registerBusinessLocation}),
+    connect(state => ({initialValues: state.registerBusiness.location, business_id: state.registerBusiness.business_id}), {registerBusinessLocation}),
 )(RegisterBusinessLocationForm);

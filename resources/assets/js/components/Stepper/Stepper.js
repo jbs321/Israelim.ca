@@ -73,18 +73,21 @@ class Stepper extends React.Component {
         const {classes, steps} = this.props;
         const activeStep = this.getActiveStep();
         const stepsCount = Object.keys(steps).length;
+        let step = steps[activeStep];
+        let nextBtnTxt = (step.buttonNextText) ? step.buttonNextText : "Next";
+
+        if (activeStep === stepsCount)
+                nextBtnTxt = 'Finish';
 
         return (
             <div className={classes.controller}>
-                <Button disabled={activeStep <= 1} onClick={this.stepBack} className={classes.button}>
-                    Back
-                </Button>
+                <Button disabled={activeStep <= 1} onClick={this.stepBack} className={classes.button}>Back</Button>
                 <Button variant="contained"
                         color="primary"
                         disabled={activeStep >= stepsCount + 1}
                         onClick={this.stepForward}
                         className={classes.button}>
-                    {activeStep === stepsCount ? 'Finish' : 'Next'}
+                    {nextBtnTxt}
                 </Button>
             </div>
         );
@@ -108,6 +111,8 @@ Stepper.propTypes = {
     stepBach: PropTypes.func,
     stepForward: PropTypes.func,
     activeStep: PropTypes.number,
+    buttonNextText: PropTypes.string,
+    buttonBackText: PropTypes.string,
 };
 
 const enhance = compose(
