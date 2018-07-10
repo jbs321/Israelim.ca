@@ -2,13 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Form, Field, reduxForm} from 'redux-form';
 import {registerUser} from "../../actions/BusinessRegistration/Registration";
-import {asyncValidate, validate} from './RegistrationValidation';
+import {asyncValidate, validate} from './Validation/RegistrationValidation';
 import TextField from '../fields/TextField';
 import PhoneNumberField from "../fields/PhoneField";
 import PasswordField from "../fields/PasswordField";
 export const FORM__REGISTER_USER = "RegisterForm";
 
-class Register extends React.Component {
+class RegisterUserForm extends React.Component {
     render() {
         return (
             <div className={"container"}>
@@ -89,8 +89,8 @@ const config = {
     asyncBlurFields: asyncBlurFields,
 };
 
-Register = reduxForm(config)(Register);
+RegisterUserForm = reduxForm(config)(RegisterUserForm);
 
 export default connect(state => ({
     initialValues: state.register.user
-}), {registerUser})(Register);
+}), {registerUser})(RegisterUserForm);

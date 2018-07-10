@@ -1,6 +1,6 @@
 import React from 'react';
 import {Switch, Route} from 'react-router-dom';
-import Login from "./form/Login";
+import Login from "./form/LoginForm";
 import WelcomePage from "./page/WelcomePage";
 import BusinessViewPage from "./page/BusinessViewPage";
 import BusinessRegisterPage from './page/BusinessRegisterPage'

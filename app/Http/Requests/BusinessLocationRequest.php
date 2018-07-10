@@ -37,7 +37,6 @@ class BusinessLocationRequest extends FormRequest
                     }
                 },
             ],
-            Location::FIELD_APARTMENT   => 'required',
             Location::FIELD_CITY        => 'required',
             Location::FIELD_ADDRESS     => 'required',
             Location::FIELD_POSTAL_CODE => 'required',

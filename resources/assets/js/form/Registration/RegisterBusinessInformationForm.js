@@ -7,7 +7,7 @@ import TextField from "../fields/TextField";
 import PhoneField from "../fields/PhoneField";
 import {onUpload, onDelete} from '../../actions/Files';
 import {registerBusiness} from '../../actions/BusinessRegistration/RegisterBusinessInfo';
-import {validateBusiness as validate} from './RegistrationValidation';
+import {validate} from './Validation/RegisterBusinessInformationFormValidation';
 import Typography from '@material-ui/core/Typography';
 import FileUpload from '../../components/fileUpload/FileUpload';
 import _ from "lodash";

@@ -5,16 +5,14 @@ import {login} from '../actions/Login';
 import {fetchAuth} from '../actions/Auth';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import history from '../history';
-
-let qs = require('qs');
 
 const style = {
     margin: 12,
 };
 
-class Login extends React.Component {
+class LoginForm extends React.Component {
     renderField(field) {
         const {meta: {touched, error}} = field;
         const className = `form-group ${touched && error ? 'has-danger' : ""}`;
@@ -33,7 +31,6 @@ class Login extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         const {handleSubmit} = this.props;
         const className = (this.props.className !== undefined) ? this.props.className : "";
         return (
@@ -88,13 +85,9 @@ function validate(values) {
     return errors;
 }
 
-function mapStateToProps(state) {
-    return state;
-}
-
 export default reduxForm({
     validate,
     form: 'LoginForm'
 })(
-    connect(mapStateToProps, {login, fetchAuth})(Login)
+    connect(state => state, {login, fetchAuth})(LoginForm)
 );

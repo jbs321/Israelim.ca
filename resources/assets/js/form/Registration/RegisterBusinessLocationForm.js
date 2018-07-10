@@ -4,34 +4,40 @@ import {Field, Form, reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {compose} from "recompose";
 import TextField from "../fields/TextField";
-import {validate} from './Validation/BusinessLocationFormValidation'
+import {validate, asyncValidate} from './Validation/RegisterBusinessLocationFormValidation'
+import {registerBusinessLocation} from '../../actions/BusinessRegistration/RegisterBusinessLocation'
 import PostalCodeField from "../fields/PostalCodeField";
 import SelectField from "../fields/SelectField";
-import {registerBusinessLocation} from '../../actions/BusinessRegistration/RegisterBusinessLocation'
 
 export const FORM__REGISTER_BUSINESS_LOCATION = "form__register_business_location";
 
 class RegisterBusinessLocationForm extends React.Component {
     render() {
-        const {handleSubmit} = this.props;
+        const {handleSubmit, registerBusinessLocation} = this.props;
         const that = this;
 
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
-                    values.business_id = that.props.business_id;
+                    let related_id = that.props.related_id;
+
+                    if(!related_id)
+                        throw new Error("Missing Business ID");
+
+                    values.related_id = related_id;
+
                     registerBusinessLocation(values, (data) => {
                         that.props.onSubmit(data);
                     });
                 })}>
                     <Field
-                        name="street_address"
+                        name="address"
                         label="Street Address"
                         placeholder={"e.g. 11108 107th Avenue"}
                         component={TextField}/>
 
                     <Field
-                        name="apt"
+                        name="apartment"
                         label="Apt, Suite. (Optional)"
                         placeholder={"e.g. Suite #7"}
                         component={TextField}/>
@@ -90,18 +96,21 @@ RegisterBusinessLocationForm.propTypes = {
 const config = {
     form: FORM__REGISTER_BUSINESS_LOCATION,
     fields: [
-        'business_id',
         'postal_code',
         'province',
         'city',
-        'apt',
-        'street_address',
+        'apartment',
+        'address',
     ],
     validate,
+    asyncValidate,
     destroyOnUnmount: false,
 };
 
 export default compose(
     reduxForm(config),
-    connect(state => ({initialValues: state.registerBusiness.location, business_id: state.registerBusiness.business_id}), {registerBusinessLocation}),
+    connect(state => ({
+        initialValues: state.registerBusiness.location,
+        related_id: state.registerBusiness.business_id
+    }), {registerBusinessLocation}),
 )(RegisterBusinessLocationForm);

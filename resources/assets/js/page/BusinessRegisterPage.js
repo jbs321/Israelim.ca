@@ -5,7 +5,7 @@ import withPageWrapper from "../HOC/withPageWrapper";
 import {LinearDeterminateStepper} from "../components/Stepper/LinearDeterminateStepper";
 import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformationForm";
 import RegisterBusinessLocationForm, {FORM__REGISTER_BUSINESS_LOCATION} from "../form/Registration/RegisterBusinessLocationForm";
-import RegisterLocationConfirmationForm, {FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION} from "../form/Registration/RegisterLocationConfirmationForm";
+import RegisterLocationConfirmationForm, {FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION} from "../form/Registration/RegisterBusinessLocationConfirmationForm";
 import {connect} from "react-redux";
 
 const STEP__GENERAL_INFORMATION   = 1;
@@ -27,7 +27,6 @@ class BusinessRegisterPage extends React.Component {
 
     state = {
         activeStep: STEP__GENERAL_INFORMATION,
-        transport: {},
         steps: {
             [STEP__GENERAL_INFORMATION]: {
                 label: "General Information",

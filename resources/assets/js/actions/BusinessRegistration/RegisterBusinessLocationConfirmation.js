@@ -4,16 +4,17 @@ export const REGISTER_BUSINESS_LOCATION_CONFIRMATION = "register_business_locati
 
 export const registerBusinessLocationConfirmation = (values, cb, notFoundCb) => {
     let formData = new FormData();
-    formData.append("business_id", 1);
     formData.append("is_confirmed", true);
 
-    let request = post("/business/register/location/confirm/8", formData)
-        .then((data) => cb(data.data))
-        .catch(function(thrown) {
-            if(parseInt(thrown.response.status) === 404) {
-                notFoundCb(thrown.response.data);
-            }
-        });
+    let request = post("/business/register/location/confirm/" + values.location_id, formData);
+
+    request.then((data) => cb(data.data));
+
+    request.catch((thrown) => {
+        if (parseInt(thrown.response.status) === 404) {
+            notFoundCb(thrown.response.data);
+        }
+    });
 
     return {
         type: REGISTER_BUSINESS_LOCATION_CONFIRMATION,

@@ -9,6 +9,8 @@ use Google\Facades\Google;
 use Google\Types\GooglePlacesResponse;
 use Google\Types\GooglePlacesResult;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BusinessLocationController extends Controller
 {
@@ -54,20 +56,63 @@ class BusinessLocationController extends Controller
     }
 
     /**
-     * @param Location $businessLocation
+     * @param Location $location
      *
      * @return JsonResponse
      */
-    public function confirmLocation(Location $businessLocation)
+    public function confirmLocation(Location $location)
     {
-        $businessLocation->update([
+        $location->update([
             Location::FIELD_IS_CONFIRMED => true
         ]);
 
         /** @var Business $business */
-        $business = $businessLocation->business();
+        $business = $location->related;
         $business->location;
 
         return new JsonResponse($business);
+    }
+
+    public function validateLocation(Request $request, Location $location)
+    {
+        $rules     = [
+            Location::FIELD_CITY        => 'required',
+            Location::FIELD_ADDRESS     => 'required',
+            Location::FIELD_POSTAL_CODE => 'required',
+        ];
+        $validator = $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return new JsonResponse($validator->errors());
+        }
+
+        $location->fill($request->all());
+
+        $query = join(", ", [
+            $location->{Location::FIELD_COUNTRY},
+            $location->{Location::FIELD_PROVINCE},
+            $location->{Location::FIELD_CITY},
+            $location->{Location::FIELD_ADDRESS},
+            $location->{Location::FIELD_POSTAL_CODE},
+        ]);
+
+        $address = Google::placesAutoComplete()->findAddressByQuery($query);
+        $place   = Google::places()->findAddressByQuery($query);
+
+        $validator = Validator::make($request->all(), [
+            Location::FIELD_ADDRESS => [
+                function ($attribute, $value, $fail) use ($address, $place) {
+                    if (empty($address) && $place->getStatus() != GooglePlacesResponse::STATUS_TYPE__OK) {
+                        return $fail('Address not exists');
+                    }
+                },
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return new JsonResponse($validator->errors());
+        }
+
+        return new JsonResponse(["validation" => "success"]);
     }
 }

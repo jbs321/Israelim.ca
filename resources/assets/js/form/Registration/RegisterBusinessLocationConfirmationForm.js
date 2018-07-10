@@ -8,9 +8,10 @@ import MapContainer from '../../components/Google/MapContainer'
 
 export const FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION = "form__register_business_location_confirmation";
 
-class RegisterLocationConfirmationForm extends React.Component {
+class RegisterBusinessLocationConfirmationForm extends React.Component {
     render() {
         const {handleSubmit, registerBusinessLocationConfirmation} = this.props;
+        const that = this;
 
         return (
             <div className={"container"}>
@@ -20,9 +21,10 @@ class RegisterLocationConfirmationForm extends React.Component {
                     };
 
                     const locationNotFound = (data) => {
-                        console.log(data);
                         alert("Address Not Found");
                     };
+
+                    values.location_id = that.props.registerBusiness.location.id;
 
                     registerBusinessLocationConfirmation(values, locationRegistered, locationNotFound);
                 })}>
@@ -34,7 +36,7 @@ class RegisterLocationConfirmationForm extends React.Component {
     }
 }
 
-RegisterLocationConfirmationForm.propTypes = {
+RegisterBusinessLocationConfirmationForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
 };
 
@@ -47,4 +49,4 @@ const config = {
 export default compose(
     reduxForm(config),
     connect(state => state, {registerBusinessLocationConfirmation}),
-)(RegisterLocationConfirmationForm);
+)(RegisterBusinessLocationConfirmationForm);
