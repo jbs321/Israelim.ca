@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FileUpload extends Model
 {
+    use SoftDeletes;
+
     const TABLE_NAME = "file_uploads";
 
     const FIELD__ID = "id";
@@ -44,4 +47,11 @@ class FileUpload extends Model
         self::FIELD__CREATED_AT,
         self::FIELD__UPDATED_AT,
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 }

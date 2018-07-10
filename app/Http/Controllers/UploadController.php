@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Storage;
 class UploadController extends Controller
 {
     const PATH_TEMP = "tmp";
-    const PATH_TEMP_IMAGES = "tmp/images";
     const PATH_TEMP_FILES = "tmp/files";
     const PATH_USER = "user";
     const PATH_USER_FILES = "user/files";
@@ -28,62 +27,34 @@ class UploadController extends Controller
     {
         //make sure the request returns files array
         $this->middleware(StartSession::class);
+        $this->middleware(FileArrayValidationMiddleware::class);
     }
 
-    public function uploadImages(FileUploadRequest $request)
+    public function upload(FileUploadRequest $request)
     {
         $token      = $request->session()->token();
         $paths      = [];
         $fileUpload = [];
 
-        $images = $request->get('files');
-
-        /** @var UploadedFile $image */
-        foreach ($images as $image) {
-            $path = $image->store(self::PATH_TEMP_IMAGES . "/{$token}");
-
-            $request->session()->push("uploaded", $path);
-
-            $paths[$image->getClientOriginalName()] = $path;
-            $filePathChunks                         = explode("/", $path);
-
-
-            $fileUpload[] = [
-                FileUpload::FIELD__PATH          => $path,
-                FileUpload::FIELD__EXTENSION     => $image->getExtension(),
-                FileUpload::FIELD__MIME_TYPE     => $image->getMimeType(),
-                FileUpload::FIELD__SIZE          => $image->getSize(),
-                FileUpload::FIELD__NAME          => end($filePathChunks),
-                FileUpload::FIELD__ERROR_MESSAGE => $image->getError(),
-                FileUpload::FIELD__CREATED_AT    => Carbon::now(),
-                FileUpload::FIELD__UPDATED_AT    => Carbon::now(),
-            ];
-        }
-
-        DB::table(FileUpload::TABLE_NAME)->insert($fileUpload);
-
-        return new JsonResponse($paths);
-    }
-
-    public function uploadFiles(FileUploadRequest $request)
-    {
-        $token      = $request->session()->token();
-        $paths      = [];
-        $fileUpload = [];
-        $files      = $request->get('files');
+        $files = $request->get('files');
 
         /** @var UploadedFile $file */
         foreach ($files as $file) {
-            $path                                  = $file->store(self::PATH_TEMP_FILES);
+            $path = $file->store(self::PATH_TEMP_FILES . "/{$token}");
+
+            $request->session()->push("uploaded", $path);
+
             $paths[$file->getClientOriginalName()] = $path;
-            $filePathChunks                        = explode("/", $path);
+
+            $chunks   = explode("/", $path);
+            $fileName = end($chunks);
 
             $fileUpload[] = [
                 FileUpload::FIELD__PATH          => $path,
                 FileUpload::FIELD__EXTENSION     => $file->getExtension(),
                 FileUpload::FIELD__MIME_TYPE     => $file->getMimeType(),
                 FileUpload::FIELD__SIZE          => $file->getSize(),
-                FileUpload::FIELD__NAME          => end($filePathChunks),
+                FileUpload::FIELD__NAME          => $fileName,
                 FileUpload::FIELD__ERROR_MESSAGE => $file->getError(),
                 FileUpload::FIELD__CREATED_AT    => Carbon::now(),
                 FileUpload::FIELD__UPDATED_AT    => Carbon::now(),
@@ -95,7 +66,7 @@ class UploadController extends Controller
         return new JsonResponse($paths);
     }
 
-    public function deleteFile(Request $request)
+    public function delete(Request $request)
     {
         $token = $request->session()->token();
 
@@ -104,7 +75,7 @@ class UploadController extends Controller
                 'required',
                 'string',
                 function ($attribute, $value, $fail) use ($token) {
-                    if (!in_array($token, explode("/", $value))) {
+                    if ( ! in_array($token, explode("/", $value))) {
                         return $fail("Can't remove requested files for path: {$value}");
                     }
                 }
@@ -114,6 +85,12 @@ class UploadController extends Controller
         $path = $request->get("path");
 
         Storage::delete($path);
+
+        $directory = self::PATH_TEMP_FILES . "/{$token}";
+
+        if (empty(Storage::files($directory))) {
+            Storage::deleteDirectory($directory);
+        }
 
         FileUpload::where("path", $path)->delete();
 

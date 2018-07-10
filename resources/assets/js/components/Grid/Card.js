@@ -38,8 +38,10 @@ class Card extends React.Component {
 
         return (
             <Link to={`/business/${idx}`} target="_blank">
-                <div className={classes.outerWrapper + " m-2 my-4"} style={{background: "radial-gradient(circle, rgb(255, 255, 255), #8080b9, #d29b9b)"}}>
-                    <div className={classes.imageWrapper} style={{backgroundImage, backgroundPosition: "center center"}}></div>
+                <div className={classes.outerWrapper + " m-2 my-4"}
+                     style={{background: "radial-gradient(circle, rgb(255, 255, 255), #8080b9, #d29b9b)"}}>
+                    <div className={classes.imageWrapper}
+                         style={{backgroundImage, backgroundPosition: "center center"}}></div>
                     {/*<div className={classes.imageWrapper} style={{backgroundImage, backgroundPosition: "center center"}}></div>*/}
                     {/*<div className={classes.imageWrapper} style={{backgroundColor: "#f3f3f3",backgroundImage, backgroundPosition: "center center"}}></div>*/}
 

@@ -21,6 +21,7 @@ class FileArrayValidationMiddleware
         $rules         = [];
         $files         = [];
 
+        //Tmp solution to avoid validation on delete
         if ($request->isMethod('delete')) {
             return $next($request);
         }

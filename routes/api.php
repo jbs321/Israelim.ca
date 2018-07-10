@@ -35,10 +35,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('post/store', 'PostController@store');
     Route::delete('posts/{post}/delete', 'PostController@destroy');
 
-    Route::post('posts/{post}/uploadImages', 'PostImageController@saveImages');
-
-    Route::post('/upload', 'UploadController@uploadImages')->middleware([FileArrayValidationMiddleware::class]);
-    Route::delete('/upload/delete', 'UploadController@deleteFile');
+    //File Uploads
+    Route::post('/upload', 'UploadController@upload');
+    Route::delete('/upload/delete', 'UploadController@delete');
 
     Route::prefix('business')->group(function () {
         Route::prefix('register')->group(function () {
