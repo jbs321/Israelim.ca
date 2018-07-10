@@ -13,6 +13,12 @@ class Business extends Model
     const FIELD_USER_ID = "user_id";
     const FIELD_INDUSTRY = "industry";
     const FIELD_IMAGE_ID = "business_image_id";
+    const FIELD_STATUS = "status";
+
+    const STATUS__INFO_REGISTERED = 1;
+    const STATUS__LOCATION_REGISTERED = 2;
+    const STATUS__LOCATION_CONFIRMED = 3;
+    const STATUS__REGISTRATION_FINISHED = 4;
 
     const TABLE_NAME = "business";
 
@@ -25,10 +31,6 @@ class Business extends Model
         self::FIELD_USER_ID,
         self::FIELD_INDUSTRY,
         self::FIELD_IMAGE_ID,
-    ];
-
-    protected $hidden = [
-        self::FIELD_ID,
     ];
 
     /**

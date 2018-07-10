@@ -23,6 +23,7 @@ class BusinessController extends Controller
     public function show(Request $request, Business $business)
     {
         $business->images;
+        $business->location;
 
         return new JsonResponse($business);
     }
@@ -50,47 +51,59 @@ class BusinessController extends Controller
         $details[Business::FIELD_USER_ID] = $userId;
 
         $business = new Business();
+        $business->status = Business::STATUS__INFO_REGISTERED;
         $business->fill($details);
         $business->save();
-        
+
+        $directory = UploadController::PATH_TEMP_FILES . "/{$token}";
+
         if (isset($details['images'])) {
             $paths = explode(",", $details['images']);
 
             foreach ($paths as $key => $path) {
-
                 /** @var FileUpload $fileUpload */
                 $fileUpload = FileUpload::where("path", $path)->firstOrFail();
+                $files      = Storage::files($directory);
+
+                if ( ! in_array($path, $files)) {
+                    throw new \Exception("Missing file in directory");
+                }
 
                 if (strpos($path, $token) === false) {
                     $fileUpload->{FileUpload::FIELD__ERROR_MESSAGE} = "Wrong session save attempt";
                 } else {
-                    //old/new paths
-                    $tmpPath   = $fileUpload->{FileUpload::FIELD__PATH};
-                    $extension = explode(".", $tmpPath)[1];
-                    $newPath   = UploadController::PATH_BUSINESS_IMAGES . "/$business->id/$userId/$key.$extension";
+                    $curPath   = $fileUpload->{FileUpload::FIELD__PATH};
+                    $extension = explode(".", $curPath)[1];
+                    $fileName  = join(".", [$key, $extension]);
+                    $newPath   = $this->createBusinessImagePath($business) . $fileName;
 
                     //move file to new destination
-                    Storage::move($tmpPath, $newPath);
+                    Storage::copy($curPath, $newPath);
 
-                    //save new File Location
-                    $fileUpload->{FileUpload::FIELD__PATH} = $newPath;
+                    $fileUpload->delete();
+                    Storage::delete($curPath);
 
                     //save business file
-                    $businessFile = new File();
-                    $businessFile->fill($fileUpload->toArray());
-                    $businessFile->{File::FIELD__BUSINESS_ID} = $business->id;
-                    $businessFile->save();
+                    $file = new File();
+                    $file->fill($fileUpload->toArray());
+                    $file->{File::FIELD__NAME}             = $fileName;
+                    $file->{File::FIELD__PATH}             = $newPath;
+                    $file->{File::FIELD__EXTENSION}        = $extension;
+                    $file->{File::FIELD__RELATED_ID}       = $business->id;
+                    $file->{File::FIELD__RELATED_TYPE}     = Business::class;
+                    $file->{File::FIELD__COPIED_FROM_PATH} = $curPath;
+                    $file->save();
                 }
 
                 $fileUpload->save();
             }
 
-            Storage::deleteDirectory(UploadController::PATH_TEMP_IMAGES . "/$token");
+            Storage::deleteDirectory($directory);
         }
 
-        $businessArr = array_merge($business->toArray(), ['business_id' => $business->id]);
+        $business->images;
 
-        return new JsonResponse($businessArr);
+        return new JsonResponse($business);
     }
 
     public function delete(Business $business)
@@ -106,5 +119,34 @@ class BusinessController extends Controller
         $business->save();
 
         return new JsonResponse($business);
+    }
+
+    /**
+     * @param Business $business
+     * @param string $basePath
+     *
+     * @return string
+     */
+    protected function createBusinessImagePath(
+        Business $business,
+        $basePath = UploadController::PATH_BUSINESS_IMAGES
+    ): string {
+        $userId     = Auth::user()->id;
+        $businessId = $business->id;
+
+        $sections   = [];
+        $sections[] = $basePath;
+
+        if (isset($businessId)) {
+            $sections[] = $businessId;
+        }
+
+        if (isset($userId)) {
+            $sections[] = $userId;
+        }
+
+        $path = join("/", $sections) . "/";
+
+        return $path;
     }
 }

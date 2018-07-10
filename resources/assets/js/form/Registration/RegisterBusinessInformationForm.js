@@ -25,7 +25,11 @@ class RegisterBusinessInformationForm extends React.Component {
 
         let newState = {};
 
-        this.setState({selected: files.map(file => file.name)});
+        let selected = files.map(file => {
+            return file.name;
+        });
+
+        this.setState({selected: selected});
 
         let filtered = _.filter(files, (file) => !Object.keys(images).includes(file.name));
 
@@ -61,13 +65,15 @@ class RegisterBusinessInformationForm extends React.Component {
     };
 
     render() {
-        const {handleSubmit, registerBusiness} = this.props,
-            {images, selected} = this.state;
+        const {handleSubmit, registerBusiness} = this.props;
+        const that = this;
 
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
-                    let filtered = _.pickBy(images, (image, name) => selected.includes(name)),
+                    let filtered = _.pickBy(that.state.images, (image, name) => {
+                            return that.state.selected.includes(name);
+                        }),
                         paths = _.map(filtered, image => image.path);
 
                     registerBusiness(data => this.props.onSubmit(data), paths, values);
@@ -106,8 +112,6 @@ class RegisterBusinessInformationForm extends React.Component {
                         <Typography caption={"subheading"}>Upload Business Images</Typography>
                         <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete}/>
                     </div>
-
-                    {/*<button type="submit" disabled={!valid}>Regsiter</button>*/}
                 </Form>
             </div>
         );

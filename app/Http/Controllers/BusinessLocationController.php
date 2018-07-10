@@ -50,11 +50,12 @@ class BusinessLocationController extends Controller
 
         /** @var Business $business */
         $business = $location->related;
+        $business->status = Business::STATUS__LOCATION_REGISTERED;
+        $business->save();
+
         $business->location;
-
-        $businessArr = array_merge($business->toArray(), ['business_id' => $business->id]);
-
-        return new JsonResponse($businessArr);
+        $business->images;
+        return new JsonResponse($business);
     }
 
     /**
@@ -70,7 +71,11 @@ class BusinessLocationController extends Controller
 
         /** @var Business $business */
         $business = $location->related;
+        $business->status = Business::STATUS__REGISTRATION_FINISHED;
+        $business->save();
+
         $business->location;
+        $business->images;
 
         return new JsonResponse($business);
     }
