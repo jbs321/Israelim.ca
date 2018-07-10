@@ -18,8 +18,6 @@ Route::post('/ping', function (Request $request) {
     return new \Illuminate\Http\JsonResponse(["pong" => [1, 2, 3, 4]]);
 });
 
-Route::get('/address/{query}', 'GooglePlacesController@findAddress');
-
 Route::post('/business', 'BusinessController@index');
 Route::get('/business/{business}', 'BusinessController@show');
 
