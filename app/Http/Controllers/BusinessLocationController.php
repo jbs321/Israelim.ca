@@ -34,10 +34,9 @@ class BusinessLocationController extends Controller
             $location->{Location::FIELD_POSTAL_CODE},
         ]);
 
-        $address = Google::placesAutoComplete()->findAddressByQuery($query);
-        $place   = Google::places()->findAddressByQuery($query);
+        $place = Google::places()->findAddressByQuery($query);
 
-        if (empty($address) && $place->getStatus() != GooglePlacesResponse::STATUS_TYPE__OK) {
+        if ($place->getStatus() != GooglePlacesResponse::STATUS_TYPE__OK) {
             return new JsonResponse(["status" => "not found", "message" => "Address not found"], 404);
         }
 
@@ -49,12 +48,11 @@ class BusinessLocationController extends Controller
         Location::updateOrCreate($location->toArray());
 
         /** @var Business $business */
-        $business = $location->related;
+        $business         = $location->related;
         $business->status = Business::STATUS__LOCATION_REGISTERED;
         $business->save();
+        $business->getAllRelationships();
 
-        $business->location;
-        $business->images;
         return new JsonResponse($business);
     }
 
@@ -70,12 +68,10 @@ class BusinessLocationController extends Controller
         ]);
 
         /** @var Business $business */
-        $business = $location->related;
+        $business         = $location->related;
         $business->status = Business::STATUS__REGISTRATION_FINISHED;
         $business->save();
-
-        $business->location;
-        $business->images;
+        $business->getAllRelationships();
 
         return new JsonResponse($business);
     }
@@ -87,7 +83,8 @@ class BusinessLocationController extends Controller
             Location::FIELD_ADDRESS     => 'required',
             Location::FIELD_POSTAL_CODE => 'required',
         ];
-        $validator = $validator = Validator::make($request->all(), $rules);
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return new JsonResponse($validator->errors());
@@ -103,13 +100,12 @@ class BusinessLocationController extends Controller
             $location->{Location::FIELD_POSTAL_CODE},
         ]);
 
-        $address = Google::placesAutoComplete()->findAddressByQuery($query);
-        $place   = Google::places()->findAddressByQuery($query);
+        $place = Google::places()->findAddressByQuery($query);
 
         $validator = Validator::make($request->all(), [
             Location::FIELD_ADDRESS => [
-                function ($attribute, $value, $fail) use ($address, $place) {
-                    if (empty($address) && $place->getStatus() != GooglePlacesResponse::STATUS_TYPE__OK) {
+                function ($attribute, $value, $fail) use ($place) {
+                    if ($place->getStatus() != GooglePlacesResponse::STATUS_TYPE__OK) {
                         return $fail('Address not exists');
                     }
                 },

@@ -38,7 +38,7 @@ class Business extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     /**
@@ -62,5 +62,13 @@ class Business extends Model
     public function location()
     {
         return $this->morphOne(Location::class, 'related');
+    }
+
+    public function getAllRelationships() {
+        $this->location;
+        $this->images;
+        $this->user;
+
+        return $this;
     }
 }

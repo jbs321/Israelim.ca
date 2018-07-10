@@ -78,8 +78,14 @@ class BusinessController extends Controller
                     $newPath   = $this->createBusinessImagePath($business) . $fileName;
 
                     //move file to new destination
+                    if(Storage::exists($newPath)) {
+                        Storage::delete($newPath);
+                    }
+
                     Storage::copy($curPath, $newPath);
 
+
+                    //delete temp file
                     $fileUpload->delete();
                     Storage::delete($curPath);
 

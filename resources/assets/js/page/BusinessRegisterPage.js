@@ -1,6 +1,7 @@
 import React from 'react';
 import {compose} from 'recompose';
 import {submit} from 'redux-form';
+// import {submit} from 'redux-form';
 import withPageWrapper from "../HOC/withPageWrapper";
 import {LinearDeterminateStepper} from "../components/Stepper/LinearDeterminateStepper";
 import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformationForm";
@@ -16,6 +17,10 @@ const STEP__BUSINESS_DESCRIPTION  = 5;
 const STEP__PAYMENT               = 6;
 
 class BusinessRegisterPage extends React.Component {
+    componentDidMount() {
+
+    }
+
     handleFormSubmit = (data) => {
         const {activeStep} = this.state;
         const nextStep = activeStep + 1;
