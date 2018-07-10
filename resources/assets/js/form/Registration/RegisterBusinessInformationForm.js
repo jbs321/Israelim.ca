@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'recompose'
-import {Form, Field, reduxForm} from 'redux-form';
+import {Field, Form, reduxForm} from 'redux-form';
 import PropTypes from "prop-types";
 import TextField from "../fields/TextField";
 import PhoneField from "../fields/PhoneField";
-import {onUpload, onDelete} from '../../actions/Files';
+import {onDelete, onUpload} from '../../actions/Files';
 import {registerBusiness} from '../../actions/BusinessRegistration/RegisterBusinessInfo';
 import {validate} from './Validation/RegisterBusinessInformationFormValidation';
 import Typography from '@material-ui/core/Typography';
@@ -72,11 +72,14 @@ class RegisterBusinessInformationForm extends React.Component {
 
                     registerBusiness(data => this.props.onSubmit(data), paths, values);
                 })}>
-                    <Field
-                        name="name"
-                        label="Business Name"
-                        component={TextField}/>
-
+                    <div className={"row"}>
+                        <div className={"col-sm-6"}>
+                            <Field
+                                name="name"
+                                label="Business Name"
+                                component={TextField}/>
+                        </div>
+                    </div>
                     <div className={"row"}>
                         <div className={"col-sm-6"}>
                             <Field
@@ -84,6 +87,8 @@ class RegisterBusinessInformationForm extends React.Component {
                                 label="Business Phone Number"
                                 component={PhoneField}/>
                         </div>
+                    </div>
+                    <div className={"row"}>
                         <div className={"col-sm-6"}>
                             <Field
                                 name="email"

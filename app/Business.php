@@ -12,6 +12,7 @@ class Business extends Model
     const FIELD_EMAIL = "email";
     const FIELD_USER_ID = "user_id";
     const FIELD_INDUSTRY = "industry";
+    const FIELD_IMAGE_ID = "business_image_id";
 
     const TABLE_NAME = "business";
 
@@ -23,6 +24,7 @@ class Business extends Model
         self::FIELD_EMAIL,
         self::FIELD_USER_ID,
         self::FIELD_INDUSTRY,
+        self::FIELD_IMAGE_ID,
     ];
 
     protected $hidden = [
@@ -37,9 +39,18 @@ class Business extends Model
         return $this->hasOne(User::class);
     }
 
+    /**
+     * https://laravel.com/docs/5.6/eloquent-relationships#polymorphic-relations
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function images()
     {
-        return $this->hasMany(BusinessFile::class);
+        return $this->morphMany(File::class, 'related');
+    }
+
+    public function image()
+    {
+        return $this->hasOne(File::class, File::FIELD__ID, self::FIELD_IMAGE_ID);
     }
 
     /**

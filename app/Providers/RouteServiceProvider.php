@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Business;
-use App\BusinessFile;
+use App\File;
 use App\UserLog;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +33,7 @@ class RouteServiceProvider extends ServiceProvider
 //            return UserLog::where('id', Crypt::decryptString($value))->first() ?? abort(404);
 //        });
 
-        Route::model('businessFile', BusinessFile::class);
+        Route::model('businessFile', File::class);
 
         Route::bind('business', function ($encryptedId) {
             $id = decrypt($encryptedId);

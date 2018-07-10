@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessFile;
+use App\File;
 use Illuminate\Http\Request;
 
 class FileController extends Controller
@@ -14,9 +14,9 @@ class FileController extends Controller
         return response()->file($storagePath);
     }
 
-    public function showBusinessImage(BusinessFile $file)
+    public function showBusinessImage(File $file)
     {
-        $path = $file->{BusinessFile::FIELD__PATH};
+        $path = $file->{File::FIELD__PATH};
         $storagePath = storage_path("app/{$path}");
         return response()->file($storagePath);
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business;
-use App\BusinessFile;
+use App\File;
 use App\FileUpload;
 use App\Http\Requests\BusinessRequest;
 use Illuminate\Http\JsonResponse;
@@ -48,10 +48,11 @@ class BusinessController extends Controller
         $details                          = $request->all();
         $userId                           = Auth::user()->id;
         $details[Business::FIELD_USER_ID] = $userId;
-        $business                         = new Business();
+
+        $business = new Business();
         $business->fill($details);
         $business->save();
-
+        
         if (isset($details['images'])) {
             $paths = explode(",", $details['images']);
 
@@ -75,9 +76,9 @@ class BusinessController extends Controller
                     $fileUpload->{FileUpload::FIELD__PATH} = $newPath;
 
                     //save business file
-                    $businessFile = new BusinessFile();
+                    $businessFile = new File();
                     $businessFile->fill($fileUpload->toArray());
-                    $businessFile->{BusinessFile::FIELD__BUSINESS_ID} = $business->id;
+                    $businessFile->{File::FIELD__BUSINESS_ID} = $business->id;
                     $businessFile->save();
                 }
 
@@ -88,6 +89,7 @@ class BusinessController extends Controller
         }
 
         $businessArr = array_merge($business->toArray(), ['business_id' => $business->id]);
+
         return new JsonResponse($businessArr);
     }
 

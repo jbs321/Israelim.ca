@@ -52,7 +52,9 @@ class BusinessLocationController extends Controller
         $business = $location->related;
         $business->location;
 
-        return new JsonResponse($business);
+        $businessArr = array_merge($business->toArray(), ['business_id' => $business->id]);
+
+        return new JsonResponse($businessArr);
     }
 
     /**

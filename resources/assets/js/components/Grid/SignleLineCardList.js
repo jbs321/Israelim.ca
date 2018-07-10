@@ -43,6 +43,8 @@ const renderList = (list) => {
 function SingleLineCardList(props) {
     const {classes, list} = props;
 
+    console.log(list);
+
     return (
         <div className={"container-fluid mx-sm-4 mx-lg-5 mx-2"}>
             <div className={"row"}>

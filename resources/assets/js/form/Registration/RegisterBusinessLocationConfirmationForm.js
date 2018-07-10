@@ -10,7 +10,7 @@ export const FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION = "form__register_bus
 
 class RegisterBusinessLocationConfirmationForm extends React.Component {
     render() {
-        const {handleSubmit, registerBusinessLocationConfirmation} = this.props;
+        const {handleSubmit, registerBusinessLocationConfirmation, registerBusiness: {location}} = this.props;
         const that = this;
 
         return (
@@ -30,7 +30,7 @@ class RegisterBusinessLocationConfirmationForm extends React.Component {
                 })}>
                 </Form>
 
-                <MapContainer style={{width: '100%', minHeight: 600}} location={{lat: 49.2358564, lng: -123.1597431}}/>
+                <MapContainer style={{width: '100%', minHeight: 600}} location={location}/>
             </div>
         );
     }
