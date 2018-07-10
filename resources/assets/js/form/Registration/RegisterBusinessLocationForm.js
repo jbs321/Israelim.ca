@@ -111,6 +111,6 @@ export default compose(
     reduxForm(config),
     connect(state => ({
         initialValues: state.registerBusiness.location,
-        related_id: state.registerBusiness.business_id
+        related_id: state.registerBusiness.id
     }), {registerBusinessLocation}),
 )(RegisterBusinessLocationForm);
