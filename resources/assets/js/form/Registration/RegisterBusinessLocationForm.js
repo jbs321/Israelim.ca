@@ -105,12 +105,17 @@ const config = {
     validate,
     asyncValidate,
     destroyOnUnmount: false,
+    enableReinitialize: true,
 };
 
-export default compose(
-    reduxForm(config),
-    connect(state => ({
+function mapStateToProps(state) {
+    return {
         initialValues: state.registerBusiness.location,
-        related_id: state.registerBusiness.id
-    }), {registerBusinessLocation}),
+        related_id: state.registerBusiness.id,
+    }
+}
+
+export default compose(
+    connect(mapStateToProps, {registerBusinessLocation}),
+    reduxForm(config),
 )(RegisterBusinessLocationForm);

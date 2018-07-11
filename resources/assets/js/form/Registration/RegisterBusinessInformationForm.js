@@ -52,10 +52,10 @@ class RegisterBusinessInformationForm extends React.Component {
     };
 
     handleOnDelete = (file) => {
-        const filePath = _.find(images, (item, name) => name === file.name).path;
+        let {images} = this.state;
+        const that = this;
 
-        let {images} = this.state,
-            that = this;
+        const filePath = _.find(images, (item, name) => name === file.name).path;
 
         onDelete(filePath).then(data => {
             let deletedPath = data.data;
@@ -68,13 +68,20 @@ class RegisterBusinessInformationForm extends React.Component {
         const {handleSubmit, registerBusiness} = this.props;
         const that = this;
 
+        console.log(that.props);
+
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
                     let filtered = _.pickBy(that.state.images, (image, name) => {
                             return that.state.selected.includes(name);
-                        }),
-                        paths = _.map(filtered, image => image.path);
+                        });
+
+                    let paths = _.map(filtered, image => image.path);
+
+                    if(that.props.initialValues && that.props.initialValues.id) {
+                        values.id = that.props.initialValues.id;
+                    }
 
                     registerBusiness(data => this.props.onSubmit(data), paths, values);
                 })}>
@@ -110,7 +117,7 @@ class RegisterBusinessInformationForm extends React.Component {
 
                     <div className={"col p-0 m-0"}>
                         <Typography caption={"subheading"}>Upload Business Images</Typography>
-                        <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete}/>
+                        <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete} images={that.props.initialValues.images}/>
                     </div>
                 </Form>
             </div>
@@ -131,11 +138,14 @@ const config = {
     ],
     validate,
     destroyOnUnmount: false,
+    enableReinitialize: true,
 };
 
 const enhance = compose(
+    connect(state => ({
+        initialValues: state.registerBusiness
+    }), {registerBusiness}),
     reduxForm(config),
-    connect(state => ({initialValues: state.registerBusiness}), {registerBusiness}),
 )(RegisterBusinessInformationForm);
 
 export default enhance;

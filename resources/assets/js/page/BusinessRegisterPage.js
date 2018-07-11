@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose} from 'recompose';
 import {submit} from 'redux-form';
-// import {submit} from 'redux-form';
+import {reLoadRegistration} from '../actions/BusinessRegistration/RegisterBusinessInfo';
 import withPageWrapper from "../HOC/withPageWrapper";
 import {LinearDeterminateStepper} from "../components/Stepper/LinearDeterminateStepper";
 import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformationForm";
@@ -9,25 +9,26 @@ import RegisterBusinessLocationForm, {FORM__REGISTER_BUSINESS_LOCATION} from "..
 import RegisterLocationConfirmationForm, {FORM__REGISTER_BUSINESS_LOCATION_CONFIRMATION} from "../form/Registration/RegisterBusinessLocationConfirmationForm";
 import {connect} from "react-redux";
 
-const STEP__GENERAL_INFORMATION   = 1;
-const STEP__LOCATION              = 2;
+const STEP__GENERAL_INFORMATION = 1;
+const STEP__LOCATION = 2;
 const STEP__LOCATION_CONFIRMATION = 3;
-const STEP__OPEN_HOURS            = 4;
-const STEP__BUSINESS_DESCRIPTION  = 5;
-const STEP__PAYMENT               = 6;
+const STEP__OPEN_HOURS = 4;
+const STEP__BUSINESS_DESCRIPTION = 5;
+const STEP__PAYMENT = 6;
 
 class BusinessRegisterPage extends React.Component {
     componentDidMount() {
-
+        const that = this;
+        this.props.reLoadRegistration((data) => {
+            if(data && data.status) {
+                that.setState({activeStep: data.status});
+            }
+        });
     }
 
     handleFormSubmit = (data) => {
-        const {activeStep} = this.state;
-        const nextStep = activeStep + 1;
-
-        this.setState({
-            activeStep: nextStep,
-        });
+        const nextStep = this.state.activeStep + 1;
+        this.setState({activeStep: nextStep});
     };
 
     state = {
@@ -36,7 +37,7 @@ class BusinessRegisterPage extends React.Component {
             [STEP__GENERAL_INFORMATION]: {
                 label: "General Information",
                 formId: FORM__REGISTER_BUSINESS_INFO,
-                content: <RegisterBusinessInformation onSubmit={this.handleFormSubmit.bind(this)} />,
+                content: <RegisterBusinessInformation onSubmit={this.handleFormSubmit.bind(this)}/>,
             },
             [STEP__LOCATION]: {
                 label: "Location",
@@ -70,13 +71,14 @@ class BusinessRegisterPage extends React.Component {
     render() {
         let {activeStep, steps} = this.state;
         const that = this;
+
+        console.log(activeStep);
+
         return (
             <div className={"stepper-wrapper"}>
                 <LinearDeterminateStepper steps={steps}
                                           activeStep={activeStep}
-                                          stepForward={() => {
-                                              that.props.submit(steps[activeStep].formId);
-                                          }}
+                                          stepForward={() => that.props.submit(steps[activeStep].formId)}
                                           stepBack={() => {
                                               let previous = activeStep - 1;
                                               this.setState({activeStep: previous})
@@ -88,7 +90,7 @@ class BusinessRegisterPage extends React.Component {
 }
 
 const enhance = compose(
-    connect(state => state, {submit}),
+    connect(state => state, {submit, reLoadRegistration}),
     withPageWrapper
 )(BusinessRegisterPage);
 

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\FileUpload;
 use App\Http\Middleware\FileArrayValidationMiddleware;
 use App\Http\Requests\FileUploadRequest;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -58,6 +60,7 @@ class UploadController extends Controller
                 FileUpload::FIELD__ERROR_MESSAGE => $file->getError(),
                 FileUpload::FIELD__CREATED_AT    => Carbon::now(),
                 FileUpload::FIELD__UPDATED_AT    => Carbon::now(),
+                FileUpload::FIELD__USER_ID       => Auth::user()->id,
             ];
         }
 

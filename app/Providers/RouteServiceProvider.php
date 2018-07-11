@@ -35,7 +35,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('businessFile', File::class);
 
-        Route::bind('business', function ($encryptedId) {
+        Route::bind('businessEncrypted', function ($encryptedId) {
             $id = decrypt($encryptedId);
             return Business::where('id', $id)->first() ?? abort(404);
         });

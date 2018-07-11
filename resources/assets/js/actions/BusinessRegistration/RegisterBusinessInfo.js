@@ -1,64 +1,6 @@
-import axios, {put, post} from "axios"
-import qs from 'qs';
+import {put, post} from "axios"
 
-export const REGISTER_USER = "register_user";
 export const REGISTER_BUSINESS_INFO = "register_business_info";
-export const STEP_BACK = "step_back";
-export const STEP_FORWARD = "step_forward";
-
-const {
-    REACT_AUTH_CONFIG_CLIENT_ID,
-    REACT_AUTH_CONFIG_CLIENT_SECRET
-} = process.env.ENV;
-
-export function registerUser(user) {
-    let form = new FormData();
-    form.append("id", user.id);
-    form.append("first_name", user.first_name);
-    form.append("last_name", user.last_name);
-    form.append("email", user.email);
-    form.append("phone_number", user.phone_number);
-    form.append("password", user.password);
-    form.append("password_confirmation", user.password_confirmation);
-
-    let request = (!user.id) ? post("/register", form) : request = axios.post("/register/update", form);
-
-    request.then(response => {
-            let postData = {
-                grant_type: 'password',
-                username: user.email,
-                password: user.password,
-                client_id: REACT_AUTH_CONFIG_CLIENT_ID,
-                client_secret: REACT_AUTH_CONFIG_CLIENT_SECRET,
-                scope: '',
-            };
-
-            const authRequest = axios({
-                method: "POST",
-                url: "/oauth/token",
-                baseURL: "/",
-                data: qs.stringify(postData),
-            });
-
-            authRequest.then(response => {
-                let result = response.data;
-                let expiresIn = JSON.stringify((result.expires_in * 1000) + new Date().getTime());
-                localStorage.setItem('token_type', result.token_type);
-                localStorage.setItem('expires_in', expiresIn);
-                localStorage.setItem('access_token', result.access_token);
-                localStorage.setItem('refresh_token', result.refresh_token);
-
-                axios.defaults.headers.common['Authorization'] = result.token_type + " " + result.access_token;
-            });
-
-        }
-    );
-
-    return {
-        type: REGISTER_USER,
-        payload: request
-    }
-}
 
 export function registerBusiness(cb = undefined, images, business) {
     let form = new FormData();
@@ -76,7 +18,7 @@ export function registerBusiness(cb = undefined, images, business) {
 
     let request = (!business.id)
         ? post("/business/register/general", form)
-        : put("/business/register/general", form);
+        : post(`/business/register/general/update/${business.id}`, form);
 
     //Trigger Callback
     request.then(data => cb(data.data));
@@ -84,5 +26,18 @@ export function registerBusiness(cb = undefined, images, business) {
     return {
         type: REGISTER_BUSINESS_INFO,
         payload: request
+    }
+}
+
+export const RELOAD_BUSINESS_REGISTRATION = 'reload_business_registration';
+
+export function reLoadRegistration(cb = undefined) {
+    let request = post("/business/register/reload");
+
+    request.then((data) => cb(data.data));
+
+    return {
+        type: RELOAD_BUSINESS_REGISTRATION,
+        payload: request,
     }
 }

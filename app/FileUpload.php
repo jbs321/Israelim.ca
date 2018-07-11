@@ -20,6 +20,7 @@ class FileUpload extends Model
     const FIELD__PATH = "path";
     const FIELD__CREATED_AT = "created_at";
     const FIELD__UPDATED_AT = "updated_at";
+    const FIELD__USER_ID = "user_id";
 
     protected $table = self::TABLE_NAME;
 

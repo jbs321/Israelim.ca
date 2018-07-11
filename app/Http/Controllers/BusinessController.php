@@ -6,6 +6,7 @@ use App\Business;
 use App\File;
 use App\FileUpload;
 use App\Http\Requests\BusinessRequest;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
@@ -50,7 +51,7 @@ class BusinessController extends Controller
         $userId                           = Auth::user()->id;
         $details[Business::FIELD_USER_ID] = $userId;
 
-        $business = new Business();
+        $business         = new Business();
         $business->status = Business::STATUS__INFO_REGISTERED;
         $business->fill($details);
         $business->save();
@@ -78,7 +79,7 @@ class BusinessController extends Controller
                     $newPath   = $this->createBusinessImagePath($business) . $fileName;
 
                     //move file to new destination
-                    if(Storage::exists($newPath)) {
+                    if (Storage::exists($newPath)) {
                         Storage::delete($newPath);
                     }
 
@@ -112,21 +113,6 @@ class BusinessController extends Controller
         return new JsonResponse($business);
     }
 
-    public function delete(Business $business)
-    {
-        $business->delete();
-
-        return new JsonResponse($business);
-    }
-
-    public function update(BusinessRequest $request, Business $business)
-    {
-        $business->update($request->all());
-        $business->save();
-
-        return new JsonResponse($business);
-    }
-
     /**
      * @param Business $business
      * @param string $basePath
@@ -154,5 +140,35 @@ class BusinessController extends Controller
         $path = join("/", $sections) . "/";
 
         return $path;
+    }
+
+    public function delete(Business $business)
+    {
+        $business->delete();
+
+        return new JsonResponse($business);
+    }
+
+    public function update(BusinessRequest $request, Business $business)
+    {
+        $business->update($request->all());
+        $business->save();
+        $business->getAllRelationships();
+
+        return new JsonResponse($business);
+    }
+
+    public function reload()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        /** @var Business $business */
+        $business = Business::where([
+            [Business::FIELD_USER_ID, '=', $user->id],
+            [Business::FIELD_STATUS, '<>', Business::STATUS__REGISTRATION_FINISHED],
+        ])->first();
+
+        $business->getAllRelationships();
+        return new JsonResponse($business);
     }
 }
