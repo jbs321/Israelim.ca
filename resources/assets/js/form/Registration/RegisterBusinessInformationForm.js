@@ -5,12 +5,13 @@ import {Field, Form, reduxForm} from 'redux-form';
 import PropTypes from "prop-types";
 import TextField from "../fields/TextField";
 import PhoneField from "../fields/PhoneField";
-import {onDelete, onUpload} from '../../actions/Files';
-import {registerBusiness} from '../../actions/BusinessRegistration/RegisterBusinessInfo';
+import {onDelete, onUpload, deleteFile} from '../../actions/Files';
+import {registerBusiness, reLoadRegistration} from '../../actions/BusinessRegistration/RegisterBusinessInfo';
 import {validate} from './Validation/RegisterBusinessInformationFormValidation';
 import Typography from '@material-ui/core/Typography';
 import FileUpload from '../../components/fileUpload/FileUpload';
 import _ from "lodash";
+import TitlebarGridList from '../../components/TitlebarGridList'
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
@@ -64,22 +65,49 @@ class RegisterBusinessInformationForm extends React.Component {
         });
     };
 
+    renderImageTile = () => {
+        const {initialValues: {images, user}} = this.props;
+
+        let data = !images ? null : images.map((image, key) => {
+            image.path   = `/file/${image.id}`;
+            image.title  = key;
+            image.author = `${user.first_name} ${user.last_name}`;
+
+            return image;
+        });
+
+        return !data ? null : (
+            <div className={"col p-0 m-0"}>
+                <TitlebarGridList data={data} options={[
+                    {
+                        name: "Delete",
+                        action: (image) => deleteFile(image),
+                    },
+                    {
+                        name: "Make main Photo",
+                        action: (image) => console.log("make main photo", image),
+                    },
+                ]}/>
+            </div>
+        );
+    };
+
     render() {
-        const {handleSubmit, registerBusiness} = this.props;
+        const {handleSubmit, registerBusiness, business} = this.props;
         const that = this;
 
-        console.log(that.props);
+        console.log(business);
 
         return (
             <div className={"container"}>
                 <Form onSubmit={handleSubmit((values) => {
                     let filtered = _.pickBy(that.state.images, (image, name) => {
-                            return that.state.selected.includes(name);
-                        });
+                        return that.state.selected.includes(name);
+                    });
 
                     let paths = _.map(filtered, image => image.path);
 
-                    if(that.props.initialValues && that.props.initialValues.id) {
+                    if (that.props.initialValues && that.props.initialValues.id) {
                         values.id = that.props.initialValues.id;
                     }
 
@@ -117,8 +145,13 @@ class RegisterBusinessInformationForm extends React.Component {
 
                     <div className={"col p-0 m-0"}>
                         <Typography caption={"subheading"}>Upload Business Images</Typography>
-                        <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete} images={that.props.initialValues.images}/>
+                        <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete}
+                                    images={that.props.initialValues.images}/>
                     </div>
+
+                    {this.props.business.images ? JSON.stringify(this.props.business.images.map((image) => image.name)) : null}
+
+                    {this.renderImageTile()}
                 </Form>
             </div>
         );
@@ -143,8 +176,9 @@ const config = {
 
 const enhance = compose(
     connect(state => ({
-        initialValues: state.registerBusiness
-    }), {registerBusiness}),
+        initialValues: state.registerBusiness,
+        business: state.registerBusiness
+    }), {registerBusiness, reLoadRegistration}),
     reduxForm(config),
 )(RegisterBusinessInformationForm);
 

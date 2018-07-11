@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Validator;
 
 class BusinessController extends Controller
 {
@@ -101,5 +103,23 @@ class BusinessController extends Controller
         $business->getAllRelationships();
 
         return new JsonResponse($business);
+    }
+
+    public function deleteImage(Request $request, File $file)
+    {
+        /** @var Collection $business */
+        $business = $file->related()->first();
+
+        if(Auth::user()->id !== $business->user->id) {
+            throw new \Exception("No permission to remove this image");
+        }
+
+        if(!Storage::delete($file->{File::FIELD__PATH})) {
+            Log::warning("File in path: {$file->{File::FIELD__PATH}} wasn't deleted");
+        }
+
+        $file->delete();
+
+        return new JsonResponse($file);
     }
 }

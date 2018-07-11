@@ -36,7 +36,6 @@ class BusinessService extends Service
     /**
      * Save Files Uploaded to TMP folder into Business folder
      * 1. Files Uploaded in TMP folder must exist
-     * 2. Existing Files in Business Folder will be removed
      * 3. if files not removed or directory not deleted there will be a log fired
      *
      * @param String $token
@@ -55,11 +54,11 @@ class BusinessService extends Service
         $newDirectory = $this->createBusinessImagePath($business);
 
         //Delete Destination Directory files
-        $business->images()->delete();
+//        $business->images()->delete();
 
-        if ( ! Storage::deleteDirectory($newDirectory)) {
-            Log::warning("Directory '{$newDirectory}' wasn't deleted");
-        }
+//        if ( ! Storage::deleteDirectory($newDirectory)) {
+//            Log::warning("Directory '{$newDirectory}' wasn't deleted");
+//        }
 
         if (empty($paths)) {
             return;
@@ -69,6 +68,7 @@ class BusinessService extends Service
             /** @var FileUpload $fileUpload */
             $fileUpload = FileUpload::where("path", $path)->firstOrFail();
             $files      = Storage::files($directory);
+            $count      = $business->images()->count() + $key + 1;
 
             if ( ! in_array($path, $files)) {
                 throw new \Exception("Missing file in directory");
@@ -79,7 +79,7 @@ class BusinessService extends Service
             } else {
                 $curPath   = $fileUpload->{FileUpload::FIELD__PATH};
                 $extension = explode(".", $curPath)[1];
-                $fileName  = join(".", [$key, $extension]);
+                $fileName  = join(".", [$count, $extension]);
                 $newPath   = $newDirectory . $fileName;
 
                 //move file to new destination

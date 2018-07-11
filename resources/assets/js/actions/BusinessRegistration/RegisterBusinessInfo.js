@@ -34,7 +34,9 @@ export const RELOAD_BUSINESS_REGISTRATION = 'reload_business_registration';
 export function reLoadRegistration(cb = undefined) {
     let request = post("/business/register/reload");
 
-    request.then((data) => cb(data.data));
+    if(cb) {
+        request.then((data) => cb(data.data));
+    }
 
     return {
         type: RELOAD_BUSINESS_REGISTRATION,
