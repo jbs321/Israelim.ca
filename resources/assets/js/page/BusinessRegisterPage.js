@@ -21,7 +21,7 @@ class BusinessRegisterPage extends React.Component {
         const that = this;
         this.props.reLoadRegistration((data) => {
             if(data && data.status) {
-                that.setState({activeStep: data.status});
+                that.setState({activeStep: data.status + 1});
             }
         });
     }
@@ -72,8 +72,6 @@ class BusinessRegisterPage extends React.Component {
         let {activeStep, steps} = this.state;
         const that = this;
 
-        console.log(activeStep);
-
         return (
             <div className={"stepper-wrapper"}>
                 <LinearDeterminateStepper steps={steps}
@@ -82,8 +80,7 @@ class BusinessRegisterPage extends React.Component {
                                           stepBack={() => {
                                               let previous = activeStep - 1;
                                               this.setState({activeStep: previous})
-                                          }}
-                />
+                                          }} />
             </div>
         );
     }
