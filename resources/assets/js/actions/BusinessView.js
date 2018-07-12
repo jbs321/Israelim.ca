@@ -1,10 +1,5 @@
-import axios from "axios/index";
+import {get} from "axios/index";
 
-let qs = require('qs');
-
-/**
- * Action Keys
- */
 export const GET_VIEW_BUSINESS = 'get_view_business';
 
 export function getBusiness(id) {
@@ -12,10 +7,7 @@ export function getBusiness(id) {
         throw new Error("id not assigned");
     }
 
-    const request = axios({
-        method: "POST",
-        url: `/business/${id}`,
-    });
+    const request = get(`/view/business/${id}`);
 
     return {
         type: GET_VIEW_BUSINESS,

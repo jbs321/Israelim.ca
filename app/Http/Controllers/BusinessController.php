@@ -31,7 +31,6 @@ class BusinessController extends Controller
     public function show(Request $request, Business $business)
     {
         $business->getAllRelationships();
-
         return new JsonResponse($business);
     }
 

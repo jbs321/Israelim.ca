@@ -17,7 +17,7 @@ export default function (state = {}, action) {
                 }
             }
 
-            return (action.payload) ? action.payload.data : false;
+            return (action.payload) ? action.payload.data : state;
 
         default:
             return state;

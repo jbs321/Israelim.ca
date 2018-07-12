@@ -1,6 +1,9 @@
 <?php
-Route::post('/business', 'BusinessController@index');
-Route::get('/business/{businessEncrypted}', 'BusinessController@show');
+
+Route::prefix('view')->group(function () {
+    Route::post('/business', 'BusinessController@index');
+    Route::get('/business/{businessEncrypted}', 'BusinessController@show');
+});
 
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/register/update', 'Auth\RegisterController@update');

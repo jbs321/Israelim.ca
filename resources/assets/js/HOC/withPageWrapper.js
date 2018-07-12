@@ -1,5 +1,4 @@
 import React from 'react'
-import {compose} from 'recompose'
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import {mergeClass} from "../helpers/styles";
@@ -25,7 +24,7 @@ const withPageWrapper = (Component) => {
 
     pageComponent.propTypes = {classes: PropTypes.object.isRequired};
 
-    return compose(withStyles(styles))(pageComponent);
+    return withStyles(styles)(pageComponent);
 };
 
 export default withPageWrapper;

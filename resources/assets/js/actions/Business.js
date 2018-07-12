@@ -10,7 +10,7 @@ export const GET_ALL_BUSINESS = 'get_all_business';
 export function getAllBusiness() {
     const request = axios({
         method: "POST",
-        url: `/business`,
+        url: `view/business`,
     });
 
     return {
