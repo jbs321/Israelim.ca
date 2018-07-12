@@ -11,7 +11,7 @@ import {validate} from './Validation/RegisterBusinessInformationFormValidation';
 import Typography from '@material-ui/core/Typography';
 import FileUpload from '../../components/fileUpload/FileUpload';
 import _ from "lodash";
-import TitlebarGridList from '../../components/TitlebarGridList'
+import UploadBusinessImages from './UploadBusinessImages'
 
 export const FORM__REGISTER_BUSINESS_INFO = "RegisterBusinessInformation";
 
@@ -65,94 +65,76 @@ class RegisterBusinessInformationForm extends React.Component {
         });
     };
 
-    renderImageTile = () => {
-        const {initialValues: {images, user}} = this.props;
+    onSubmit = (values) => {
+        const {registerBusiness} = this.props;
+        const that = this;
 
-        let data = !images ? null : images.map((image, key) => {
-            image.path   = `/file/${image.id}`;
-            image.title  = key;
-            image.author = `${user.first_name} ${user.last_name}`;
-
-            return image;
+        let filtered = _.pickBy(that.state.images, (image, name) => {
+            return that.state.selected.includes(name);
         });
 
-        return !data ? null : (
-            <div className={"col p-0 m-0"}>
-                <TitlebarGridList data={data} options={[
-                    {
-                        name: "Delete",
-                        action: (image) => deleteFile(image),
-                    },
-                    {
-                        name: "Make main Photo",
-                        action: (image) => console.log("make main photo", image),
-                    },
-                ]}/>
-            </div>
-        );
+        let paths = _.map(filtered, image => image.path);
+
+        if (that.props.initialValues && that.props.initialValues.id) {
+            values.id = that.props.initialValues.id;
+        }
+
+        registerBusiness(data => this.props.onSubmit(data), paths, values);
     };
 
     render() {
-        const {handleSubmit, registerBusiness, business} = this.props;
-        const that = this;
-
-        console.log(business);
+        const {handleSubmit, initialValues: {images}} = this.props;
 
         return (
             <div className={"container"}>
-                <Form onSubmit={handleSubmit((values) => {
-                    let filtered = _.pickBy(that.state.images, (image, name) => {
-                        return that.state.selected.includes(name);
-                    });
-
-                    let paths = _.map(filtered, image => image.path);
-
-                    if (that.props.initialValues && that.props.initialValues.id) {
-                        values.id = that.props.initialValues.id;
-                    }
-
-                    registerBusiness(data => this.props.onSubmit(data), paths, values);
-                })}>
+                <Form onSubmit={handleSubmit(this.onSubmit)}>
                     <div className={"row"}>
-                        <div className={"col-sm-6"}>
+                        <div className={"col-md-6"}>
                             <Field
                                 name="name"
                                 label="Business Name"
                                 component={TextField}/>
-                        </div>
-                    </div>
-                    <div className={"row"}>
-                        <div className={"col-sm-6"}>
                             <Field
                                 name="phone_number"
                                 label="Business Phone Number"
                                 component={PhoneField}/>
-                        </div>
-                    </div>
-                    <div className={"row"}>
-                        <div className={"col-sm-6"}>
                             <Field
                                 name="email"
                                 label="Business Email Address"
                                 component={TextField}/>
+                            <Field
+                                name="industry"
+                                label="Industry"
+                                component={TextField}/>
+
+                            <div className={"col p-0 m-0 mt-4"}>
+                                <Typography caption={"subheading"}>Upload Business Images</Typography>
+                                <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete} images={images}/>
+                            </div>
                         </div>
                     </div>
 
-                    <Field
-                        name="industry"
-                        label="Industry"
-                        component={TextField}/>
-
-                    <div className={"col p-0 m-0"}>
-                        <Typography caption={"subheading"}>Upload Business Images</Typography>
-                        <FileUpload onChange={this.handleOnChange} onDelete={this.handleOnDelete}
-                                    images={that.props.initialValues.images}/>
+                    <div className="row">
+                        <div className={"col"}>
+                            {this.renderUploadedImages()}
+                        </div>
                     </div>
-
-                    {this.props.business.images ? JSON.stringify(this.props.business.images.map((image) => image.name)) : null}
-
-                    {this.renderImageTile()}
                 </Form>
+            </div>
+        );
+    }
+
+    renderUploadedImages = () => {
+        const {business: {images}} = this.props;
+
+        if(!images || images.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className={"col p-0 m-0 mt-4"}>
+                <Typography className={"mb-2"} caption={"subheading"}>Uploaded Images</Typography>
+                <UploadBusinessImages/>
             </div>
         );
     }

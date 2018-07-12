@@ -22,7 +22,7 @@
 <body>
 
 {{--All react content gos here--}}
-<div id="root"></div>
+<div id="root" class="body"></div>
 
 {{--React JS--}}
 <script src="/js/bundle.js" type="text/javascript"></script>

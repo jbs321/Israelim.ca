@@ -33,6 +33,7 @@ export const onDelete = (filePath) => {
 };
 
 
+export const DELETE_BUSINESS_FILE = "delete_business_file";
 export const deleteFile = (file, cb) => {
 
     const request = axios.post(`/business/register/general/image/${file.id}`);
@@ -43,5 +44,8 @@ export const deleteFile = (file, cb) => {
         })
     }
 
-    return request;
+    return {
+        type: DELETE_BUSINESS_FILE,
+        payload: request,
+    };
 };

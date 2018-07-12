@@ -18,72 +18,69 @@ class RegisterBusinessLocationForm extends React.Component {
 
         return (
             <div className={"container"}>
-                <Form onSubmit={handleSubmit((values) => {
-                    let related_id = that.props.related_id;
+                <div className={"col col-sm-6"}>
+                    <Form onSubmit={handleSubmit((values) => {
+                        let related_id = that.props.related_id;
 
-                    if(!related_id)
-                        throw new Error("Missing Business ID");
+                        if (!related_id)
+                            throw new Error("Missing Business ID");
 
-                    values.related_id = related_id;
+                        values.related_id = related_id;
 
-                    registerBusinessLocation(values, (data) => {
-                        that.props.onSubmit(data);
-                    });
-                })}>
-                    <Field
-                        name="address"
-                        label="Street Address"
-                        placeholder={"e.g. 11108 107th Avenue"}
-                        component={TextField}/>
+                        registerBusinessLocation(values, (data) => {
+                            that.props.onSubmit(data);
+                        });
+                    })}>
+                        <Field
+                            name="address"
+                            label="Street Address"
+                            placeholder={"e.g. 11108 107th Avenue"}
+                            component={TextField}/>
 
-                    <Field
-                        name="apartment"
-                        label="Apt, Suite. (Optional)"
-                        placeholder={"e.g. Suite #7"}
-                        component={TextField}/>
+                        <Field
+                            name="apartment"
+                            label="Apt, Suite. (Optional)"
+                            placeholder={"e.g. Suite #7"}
+                            component={TextField}/>
 
 
-                    <div className="row">
-                        <div className="col-md-6">
-                            <Field
-                                name="city"
-                                label="Town/City"
-                                placeholder={"e.g. Edmonton"}
-                                component={TextField}/>
-                        </div>
-                        <div className="col-md-6">
-                            <Field
-                                name="province"
-                                label="Province"
-                                options={
-                                    {
-                                        BC: 'BC',
-                                        AB: 'AB',
-                                        SK: 'SK',
-                                        MB: 'MB',
-                                        ON: 'ON',
-                                        QC: 'QC',
-                                        NB: 'NB',
-                                        NS: 'NS',
-                                        PE: 'PE',
-                                        NL: 'NL',
-                                        YT: 'YT',
-                                        NT: 'NT',
-                                        NU: 'NU',
-                                    }
+                        <Field
+                            name="city"
+                            label="Town/City"
+                            placeholder={"e.g. Edmonton"}
+                            component={TextField}/>
+
+                        <Field
+                            name="province"
+                            label="Province"
+                            component={SelectField}
+                            options={
+                                {
+                                    BC: 'BC',
+                                    AB: 'AB',
+                                    SK: 'SK',
+                                    MB: 'MB',
+                                    ON: 'ON',
+                                    QC: 'QC',
+                                    NB: 'NB',
+                                    NS: 'NS',
+                                    PE: 'PE',
+                                    NL: 'NL',
+                                    YT: 'YT',
+                                    NT: 'NT',
+                                    NU: 'NU',
                                 }
-                                component={SelectField}/>
-                        </div>
-                    </div>
+                            }/>
 
-                    <Field
-                        name="postal_code"
-                        label="Postal Code"
-                        placeholder={"e.g. T5H 3Z3"}
-                        component={PostalCodeField}
-                    />
+                        <Field
+                            name="postal_code"
+                            label="Postal Code"
+                            placeholder={"e.g. T5H 3Z3"}
+                            component={PostalCodeField}
+                        />
 
-                </Form>
+                    </Form>
+                </div>
             </div>
         );
     }

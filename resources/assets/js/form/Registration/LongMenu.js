@@ -22,7 +22,8 @@ class LongMenu extends React.Component {
 
     handleSelect = (event, option) => {
         if (option.action) {
-            option.action(this.props.tile);
+            option.action(this.props.image);
+            this.handleClose();
         }
     };
 
@@ -34,19 +35,17 @@ class LongMenu extends React.Component {
         const {anchorEl} = this.state;
         const {icon, options} = this.props;
 
-        const renderedIcon = icon ? icon : <MoreVertIcon/>;
 
         return (
             <div>
-                <IconButton
-                    aria-label="More"
-                    aria-owns={anchorEl ? 'long-menu' : null}
-                    aria-haspopup="true"
-                    style={{color: "#fff"}}
-                    onClick={this.handleClick}
-                >
-                    {renderedIcon}
+                <IconButton aria-label="More"
+                            aria-owns={anchorEl ? 'long-menu' : null}
+                            aria-haspopup="true"
+                            style={{color: "#fff"}}
+                            onClick={this.handleClick}>
+                    {this.renderIcon()}
                 </IconButton>
+
                 <Menu
                     id="long-menu"
                     anchorEl={anchorEl}
@@ -68,11 +67,17 @@ class LongMenu extends React.Component {
             </div>
         );
     }
+
+    renderIcon = () => {
+        const {icon} = this.props;
+        return icon ? icon : <MoreVertIcon/>;
+    };
 }
 
 LongMenu.propTypes = {
     classes: PropTypes.object.isRequired,
     options: PropTypes.array.isRequired,
+    image: PropTypes.object.isRequired,
 };
 
 const enhance = compose(

@@ -98,7 +98,7 @@ class BusinessController extends Controller
         $business = Business::where([
             [Business::FIELD_USER_ID, '=', $user->id],
             [Business::FIELD_STATUS, '<>', Business::STATUS__REGISTRATION_FINISHED],
-        ])->first();
+        ])->firstOrFail();
 
         $business->getAllRelationships();
 
@@ -107,7 +107,7 @@ class BusinessController extends Controller
 
     public function deleteImage(Request $request, File $file)
     {
-        /** @var Collection $business */
+        /** @var Business $business */
         $business = $file->related()->first();
 
         if(Auth::user()->id !== $business->user->id) {
@@ -119,7 +119,8 @@ class BusinessController extends Controller
         }
 
         $file->delete();
+        $business->getAllRelationships();
 
-        return new JsonResponse($file);
+        return new JsonResponse($business);
     }
 }
