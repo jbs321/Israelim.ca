@@ -9,7 +9,7 @@ import {
     deepOrange300,
     purple500,
 } from 'material-ui/styles/colors';
-import withPageWrapper from "../HOC/withPageWrapper";
+import withPageWrapper from "./withPageWrapper";
 
 const style = {margin: 5};
 

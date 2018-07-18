@@ -1,14 +1,13 @@
 import React from 'react';
-import AppBar from '../components/AppBar';
+import AppBar from './AppBar';
 
 const withAppBar = (Component) => {
     return class extends React.Component {
         render() {
             return (
                 <div className={"container-fluid p-0"}>
-                    <header style={{width: "100%",}}>
-                        <AppBar/>
-                    </header>
+                    <AppBar/>
+
 
                     <Component {...this.props}/>
                 </div>

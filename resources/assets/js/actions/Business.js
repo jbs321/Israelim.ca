@@ -1,17 +1,9 @@
-import axios from "axios/index";
+import {post} from "axios";
 
-let qs = require('qs');
-
-/**
- * Action Keys
- */
 export const GET_ALL_BUSINESS = 'get_all_business';
 
 export function getAllBusiness() {
-    const request = axios({
-        method: "POST",
-        url: `view/business`,
-    });
+    const request = post(`view/business`);
 
     return {
         type: GET_ALL_BUSINESS,

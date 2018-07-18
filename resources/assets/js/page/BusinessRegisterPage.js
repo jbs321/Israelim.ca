@@ -2,7 +2,7 @@ import React from 'react';
 import {compose} from 'recompose';
 import {submit} from 'redux-form';
 import {reLoadRegistration} from '../actions/BusinessRegistration/RegisterBusinessInfo';
-import withPageWrapper from "../HOC/withPageWrapper";
+import withPageWrapper from "./withPageWrapper";
 import {LinearDeterminateStepper} from "../components/Stepper/LinearDeterminateStepper";
 import RegisterBusinessInformation, {FORM__REGISTER_BUSINESS_INFO} from "../form/Registration/RegisterBusinessInformationForm";
 import RegisterBusinessLocationForm, {FORM__REGISTER_BUSINESS_LOCATION} from "../form/Registration/RegisterBusinessLocationForm";

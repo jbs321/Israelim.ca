@@ -3,11 +3,12 @@ import {connect} from 'react-redux'
 import {getAllBusiness} from '../actions/Business'
 import {withStyles} from '@material-ui/core/styles';
 import SingleLineCardList from '../components/Grid/SignleLineCardList'
-import withAppBar from "../HOC/WithAppBar";
+import withAppBar from "../components/AppBar/WithAppBar";
 import {compose} from 'recompose';
-import withPageWrapper from "../HOC/withPageWrapper";
+import withPageWrapper from "./withPageWrapper";
+import {withSpacer} from "../components/Spacer";
 
-const styles = (theme) => ({
+const styles = () => ({
         container: {
             padding: 0,
         },
@@ -63,6 +64,7 @@ class WelcomePage extends React.Component {
 const enhance = compose(
     connect(state => state, {getAllBusiness}),
     withAppBar,
+    withSpacer,
     withPageWrapper,
     withStyles(styles, {withTheme: true})
 );
