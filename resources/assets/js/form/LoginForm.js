@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
 import {login} from '../actions/Login';
 import {fetchAuth} from '../actions/Auth';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import {Link} from 'react-router-dom'
 import history from '../history';
 
@@ -20,10 +20,9 @@ class LoginForm extends React.Component {
         return (
             <div className={className}>
                 <TextField
-                    hintText={field.label}
                     {...field.input}
                     className="field login-field"
-                    floatingLabelText={field.label}/>
+                    />
 
                 <div className="text-help">{touched ? error : ""}</div>
             </div>
@@ -49,8 +48,7 @@ class LoginForm extends React.Component {
                             component={this.renderField}
                         />
 
-                        <RaisedButton type="submit" label="Login" primary={true} style={style}/>
-                        <RaisedButton label="Register" secondary={true} style={style}/>
+                        <Button type={"submit"}/>
                     </form>
                 </div>
 

@@ -7,6 +7,7 @@ import withAppBar from "../components/AppBar/WithAppBar";
 import {compose} from 'recompose';
 import withPageWrapper from "./withPageWrapper";
 import {withSpacer} from "../components/Spacer";
+import {mergeClass} from "../helpers/styles";
 
 const styles = () => ({
         container: {

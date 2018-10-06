@@ -43,7 +43,9 @@ const renderList = (list) => {
 function SingleLineCardList(props) {
     const {classes, list} = props;
 
-    console.log(list);
+    if(!list) {
+        return null;
+    }
 
     return (
         <div className={"container-fluid mx-sm-4 mx-lg-5 mx-2"}>
