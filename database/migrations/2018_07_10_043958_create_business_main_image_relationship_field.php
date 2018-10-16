@@ -25,7 +25,7 @@ class CreateBusinessMainImageRelationshipField extends Migration
      */
     public function down()
     {
-        Schema::table('locations', function (Blueprint $table) {
+        Schema::table('business', function (Blueprint $table) {
             $table->dropColumn("business_image_id");
         });
     }

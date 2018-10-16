@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
             User::FIELD_PHONE_NUMBER => "+1 (778) 882 - 0853",
         ]);
 
-//        $this->call([
-//            //
-//        ]);
+        $this->call([
+            BusinessTableSeeder::class,
+        ]);
     }
 }

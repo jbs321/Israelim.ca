@@ -12,11 +12,13 @@ class AuthClientsTableSeeder extends Seeder
     public function run()
     {
         DB::table('oauth_clients')->insert([
-            'secret' => '9L596Z3DirSkyJxstzbpxynUd17Inb8PWBNiOhEi',
-            'redirect' => 'http://localhost',
+            'id'                     => 100,
+            'name'                   => "Web Client",
+            'secret'                 => "FkI9pTCbjIcs4sCpymlHfuBXAKF14O3UGpf0CRAr",
+            'revoked'                => 0,
+            'redirect'               => "israelim.ca/redirect",
+            'password_client'        => 1,
             'personal_access_client' => 0,
-            'password_client' => 1,
-            'revoked' => 0,
         ]);
     }
 }
